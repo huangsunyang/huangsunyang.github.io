@@ -12,7 +12,7 @@ timezone: Asia/Shanghai
 
 # URL
 ## If your site is put in a subdirectory, set url as 'http://yoursite.com/child' and root as '/child/'
-url: http://yoursite.com
+url: http://huangsunyang.com
 root: /
 permalink: :year/:month/:day/:title/
 permalink_defaults:
@@ -76,7 +76,7 @@ theme: landscape
 
 # Deployment
 ## Docs: https://hexo.io/docs/deployment.html
-deploy:
+deploy: 
   type: git
-  rept: https://github.com/huangsunyang/huangsunyang.github.io.git
+  repo: https://github.com/huangsunyang/huangsunyang.github.io.git
   branch: master
