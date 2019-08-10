@@ -126,3 +126,32 @@ P = \frac
 \sum_{i=1}^n (y_i-y)^2
 \right]^{1/2} }
 $$
+
+### 字数统计和阅读时长估算
+这里我们使用的是[hexo-symbols-count-time插件](https://github.com/theme-next/hexo-symbols-count-time)，首先安装插件
+```
+npm install hexo-symbols-count-time --save
+```
+
+然后更改`themes/next/_config.yml`中的配置
+```
+# Post wordcount display settings
+# Dependencies: https://github.com/theme-next/hexo-symbols-count-time
+symbols_count_time:
+  separated_meta: true
+  item_text_post: true
+  item_text_total: false
+  awl: 2
+  wpm: 275
+  suffix: mins.
+```
+
+然后在`/_config.yml`中添加
+```
+symbols_count_time:
+  symbols: true
+  time: true
+  total_symbols: true
+  total_time: true
+  exclude_codeblock: false
+```

@@ -103,3 +103,12 @@ menu:
 # Enable/Disable menu icons.   #菜单图标  
 menu_icons:
     enable: true
+
+# # Post wordcount display settings
+# Dependencies: https://github.com/theme-next/hexo-symbols-count-time
+symbols_count_time:
+  symbols: true
+  time: true
+  total_symbols: true
+  total_time: true
+  exclude_codeblock: false    
