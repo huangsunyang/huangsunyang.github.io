@@ -64,7 +64,7 @@
 <meta property="og:description" content="前言第一篇博客大概介绍了如何在本地以及github上部署自己的hexo博客，但是人总是喜欢折腾，博客搭建完了就要考虑装修美观。我自己也稍微折腾了下，把一些踩过的坑在这里记录下 主题原来的主题说实话真的不太好看，主题不需要太折腾，能看就好，Hexo官网上有不少的主题，有兴趣的可以自己看demo，我用的是比较主流的Next主题，个人认为比官网上大多数看到的都要好看。 主题的安装相对来说较为简单，只要把">
 <meta property="og:locale" content="zh-CN">
 <meta property="og:image" content="http://huangsunyang.com/2019/08/10/hello-hexo-2/origin_menu.png">
-<meta property="og:updated_time" content="2019-08-10T10:28:42.363Z">
+<meta property="og:updated_time" content="2019-08-10T10:31:48.453Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Hello Hexo II">
 <meta name="twitter:description" content="前言第一篇博客大概介绍了如何在本地以及github上部署自己的hexo博客，但是人总是喜欢折腾，博客搭建完了就要考虑装修美观。我自己也稍微折腾了下，把一些踩过的坑在这里记录下 主题原来的主题说实话真的不太好看，主题不需要太折腾，能看就好，Hexo官网上有不少的主题，有兴趣的可以自己看demo，我用的是比较主流的Next主题，个人认为比官网上大多数看到的都要好看。 主题的安装相对来说较为简单，只要把">
@@ -264,7 +264,7 @@
                 
               
 
-              <time title="创建时间：2019-08-10 17:26:38 / 修改时间：18:28:42" itemprop="dateCreated datePublished" datetime="2019-08-10T17:26:38+08:00">2019-08-10</time>
+              <time title="创建时间：2019-08-10 17:26:38 / 修改时间：18:31:48" itemprop="dateCreated datePublished" datetime="2019-08-10T17:26:38+08:00">2019-08-10</time>
             </span>
           
             
@@ -314,6 +314,7 @@
 <h3 id="插入公式"><a href="#插入公式" class="headerlink" title="插入公式"></a>插入公式</h3><p>由于我使用了Next主题，其中已经集成了mathjax公式，首先在<code>/themes/_config.yml</code>中将math的开关打开</p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"># Math Equations Render Support</span><br><span class="line">math:</span><br><span class="line">  enable: true</span><br><span class="line"></span><br><span class="line">  # Default (true) will load mathjax / katex script on demand.</span><br><span class="line">  # That is it only render those page which has `mathjax: true` in Front-matter.</span><br><span class="line">  # If you set it to false, it will load mathjax / katex srcipt EVERY PAGE.</span><br><span class="line">  per_page: true</span><br></pre></td></tr></table></figure>
 <p>注意到<code>per_page</code>开关打开，我们需要在每篇post中指定<code>mathjax: true</code>，才会开启公式，这样就不影响别的页面的渲染速度</p>
+<p>现在页面中就可以添加公式了，比如本文中就添加了如下公式<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">$$</span><br><span class="line">P = \frac</span><br><span class="line">&#123;\sum_&#123;i=1&#125;^n (x_i- x)(y_i- y)&#125;</span><br><span class="line">&#123;\displaystyle \left[</span><br><span class="line">\sum_&#123;i=1&#125;^n (x_i-x)^2</span><br><span class="line">\sum_&#123;i=1&#125;^n (y_i-y)^2</span><br><span class="line">\right]^&#123;1/2&#125; &#125;</span><br><span class="line">$$</span><br></pre></td></tr></table></figure></p>
 <p>$$<br>P = \frac<br>{\sum_{i=1}^n (x_i- x)(y_i- y)}<br>{\displaystyle \left[<br>\sum_{i=1}^n (x_i-x)^2<br>\sum_{i=1}^n (y_i-y)^2<br>\right]^{1/2} }<br>$$</p>
 
     </div>
