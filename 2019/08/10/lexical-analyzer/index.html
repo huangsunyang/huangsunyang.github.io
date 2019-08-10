@@ -58,15 +58,15 @@
   <meta name="description" content="一些无关的感想最近在看编译原理龙书，词法分析一章看的差不多了，但仍然处于一种似懂非懂的状态，这又让我想起，大学期末考试之前复习的时候，反而是我能够真正将所有知识串联起来，融汇贯通的时候，这也就是总结和复习的重要性，因而萌生了将最近的所学所想总结一下的想法。另外，这两天忙里偷闲一直在看云风的博客，十分佩服，更加坚定了总结与记录的念头。 词法分析的作用词法分析是编译过程的第一阶段，它接触到的是第一手的">
 <meta name="keywords" content="编译原理,词法分析">
 <meta property="og:type" content="article">
-<meta property="og:title" content="lexical_analyzer">
+<meta property="og:title" content="Lexical Analyzer">
 <meta property="og:url" content="http://huangsunyang.com/2019/08/10/lexical-analyzer/index.html">
 <meta property="og:site_name" content="Decode">
 <meta property="og:description" content="一些无关的感想最近在看编译原理龙书，词法分析一章看的差不多了，但仍然处于一种似懂非懂的状态，这又让我想起，大学期末考试之前复习的时候，反而是我能够真正将所有知识串联起来，融汇贯通的时候，这也就是总结和复习的重要性，因而萌生了将最近的所学所想总结一下的想法。另外，这两天忙里偷闲一直在看云风的博客，十分佩服，更加坚定了总结与记录的念头。 词法分析的作用词法分析是编译过程的第一阶段，它接触到的是第一手的">
 <meta property="og:locale" content="zh-CN">
 <meta property="og:image" content="http://huangsunyang.com/2019/08/10/lexical-analyzer/pandora.jpg">
-<meta property="og:updated_time" content="2019-08-10T14:54:51.784Z">
+<meta property="og:updated_time" content="2019-08-10T15:06:39.427Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="lexical_analyzer">
+<meta name="twitter:title" content="Lexical Analyzer">
 <meta name="twitter:description" content="一些无关的感想最近在看编译原理龙书，词法分析一章看的差不多了，但仍然处于一种似懂非懂的状态，这又让我想起，大学期末考试之前复习的时候，反而是我能够真正将所有知识串联起来，融汇贯通的时候，这也就是总结和复习的重要性，因而萌生了将最近的所学所想总结一下的想法。另外，这两天忙里偷闲一直在看云风的博客，十分佩服，更加坚定了总结与记录的念头。 词法分析的作用词法分析是编译过程的第一阶段，它接触到的是第一手的">
 <meta name="twitter:image" content="http://huangsunyang.com/2019/08/10/lexical-analyzer/pandora.jpg">
   <link rel="canonical" href="http://huangsunyang.com/2019/08/10/lexical-analyzer/">
@@ -83,7 +83,7 @@
   };
 </script>
 
-  <title>lexical_analyzer | Decode</title>
+  <title>Lexical Analyzer | Decode</title>
   
 
 
@@ -247,7 +247,7 @@
       <header class="post-header">
 
         
-          <h1 class="post-title" itemprop="name headline">lexical_analyzer
+          <h1 class="post-title" itemprop="name headline">Lexical Analyzer
 
             
           </h1>
@@ -264,7 +264,7 @@
                 
               
 
-              <time title="创建时间：2019-08-10 21:31:54 / 修改时间：22:54:51" itemprop="dateCreated datePublished" datetime="2019-08-10T21:31:54+08:00">2019-08-10</time>
+              <time title="创建时间：2019-08-10 21:31:54 / 修改时间：23:06:39" itemprop="dateCreated datePublished" datetime="2019-08-10T21:31:54+08:00">2019-08-10</time>
             </span>
           
             
@@ -315,7 +315,7 @@
 <li>只包含下划线，字母或者数字</li>
 <li>必须以下划线或者字母开头<br>当我们遇到(的时候，可以确定变量名已经结束了。</li>
 </ul>
-<h4 id="正则表达式"><a href="#正则表达式" class="headerlink" title="正则表达式"></a>正则表达式</h4><p>正则表达式是一种用来描述词素模式的重要方法，C中变量的模式对应在正则表达式中即<code>[_a-zA-Z][_a-zA-Z0-9]*</code>。即使不熟悉正则表达式，我们也可以发现它将<strong>我们对模式的描述</strong>转化成了类数学语言。其中[]中括起来代表在其中任选一个，*代表0个或者多个重复。</p>
+<h4 id="正则表达式"><a href="#正则表达式" class="headerlink" title="正则表达式"></a>正则表达式</h4><p>正则表达式是一种用来描述词素模式的重要方法，C中变量的模式对应在正则表达式中即<code>[_a-zA-Z][_a-zA-Z0-9]*</code>。即使不熟悉正则表达式，我们也可以发现它将<strong>我们对模式的描述</strong>转化成了类数学语言。其中[]中括起来代表在其中任选一个，*代表0个或者多个重复的模式。</p>
 
     </div>
 
@@ -352,10 +352,6 @@
             <span class="post-nav-divider"></span>
 
             <div class="post-nav-prev post-nav-item">
-              
-                <a href="/2019/08/10/lexical-analyzer/" rel="prev" title="">
-                   <i class="fa fa-chevron-right"></i>
-                </a>
               
             </div>
           </div>
@@ -409,7 +405,7 @@
         
           <a href="/archives/">
         
-          <span class="site-state-item-count">4</span>
+          <span class="site-state-item-count">3</span>
           <span class="site-state-item-name">日志</span>
         </a>
       </div>
