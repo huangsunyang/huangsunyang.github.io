@@ -72,6 +72,7 @@ branch: master
 修改完毕后保存，输入以下命令就大功告成了
 
 ```
+$ npm install hexo --save
 $ npm install hexo-deployer-git --save
 $ hexo generate
 $ hexo deploy
