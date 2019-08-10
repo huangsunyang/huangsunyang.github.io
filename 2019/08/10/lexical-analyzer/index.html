@@ -1,0 +1,584 @@
+<!DOCTYPE html>
+
+
+
+
+
+<html class="theme-next muse use-motion" lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="generator" content="Hexo 3.9.0">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=7.3.0">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=7.3.0">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=7.3.0">
+  <link rel="mask-icon" href="/images/logo.svg?v=7.3.0" color="#222">
+
+<link rel="stylesheet" href="/css/main.css?v=7.3.0">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/font-awesome.min.css?v=4.7.0">
+
+
+<script id="hexo-configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Muse',
+    version: '7.3.0',
+    exturl: false,
+    sidebar: {"position":"left","display":"post","offset":12,"onmobile":false},
+    back2top: {"enable":true,"sidebar":false,"scrollpercent":false},
+    save_scroll: false,
+    copycode: {"enable":false,"show_result":false,"style":null},
+    fancybox: false,
+    mediumzoom: false,
+    lazyload: false,
+    pangu: false,
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    },
+    localsearch: {"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},
+    path: '',
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    translation: {
+      copy_button: '复制',
+      copy_success: '复制成功',
+      copy_failure: '复制失败'
+    }
+  };
+</script>
+
+  <meta name="description" content="一些无关的感想最近在看编译原理龙书，词法分析一章看的差不多了，但仍然处于一种似懂非懂的状态，这又让我想起，大学期末考试之前复习的时候，反而是我能够真正将所有知识串联起来，融汇贯通的时候，这也就是总结和复习的重要性，因而萌生了将最近的所学所想总结一下的想法。另外，这两天忙里偷闲一直在看云风的博客，十分佩服，更加坚定了总结与记录的念头。 词法分析的作用词法分析是编译过程的第一阶段，它接触到的是第一手的">
+<meta name="keywords" content="编译原理,词法分析">
+<meta property="og:type" content="article">
+<meta property="og:title" content="lexical_analyzer">
+<meta property="og:url" content="http://huangsunyang.com/2019/08/10/lexical-analyzer/index.html">
+<meta property="og:site_name" content="Decode">
+<meta property="og:description" content="一些无关的感想最近在看编译原理龙书，词法分析一章看的差不多了，但仍然处于一种似懂非懂的状态，这又让我想起，大学期末考试之前复习的时候，反而是我能够真正将所有知识串联起来，融汇贯通的时候，这也就是总结和复习的重要性，因而萌生了将最近的所学所想总结一下的想法。另外，这两天忙里偷闲一直在看云风的博客，十分佩服，更加坚定了总结与记录的念头。 词法分析的作用词法分析是编译过程的第一阶段，它接触到的是第一手的">
+<meta property="og:locale" content="zh-CN">
+<meta property="og:image" content="http://huangsunyang.com/2019/08/10/lexical-analyzer/pandora.jpg">
+<meta property="og:updated_time" content="2019-08-10T14:54:51.784Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="lexical_analyzer">
+<meta name="twitter:description" content="一些无关的感想最近在看编译原理龙书，词法分析一章看的差不多了，但仍然处于一种似懂非懂的状态，这又让我想起，大学期末考试之前复习的时候，反而是我能够真正将所有知识串联起来，融汇贯通的时候，这也就是总结和复习的重要性，因而萌生了将最近的所学所想总结一下的想法。另外，这两天忙里偷闲一直在看云风的博客，十分佩服，更加坚定了总结与记录的念头。 词法分析的作用词法分析是编译过程的第一阶段，它接触到的是第一手的">
+<meta name="twitter:image" content="http://huangsunyang.com/2019/08/10/lexical-analyzer/pandora.jpg">
+  <link rel="canonical" href="http://huangsunyang.com/2019/08/10/lexical-analyzer/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome: false,
+    isPost: true,
+    isPage: false,
+    isArchive: false
+  };
+</script>
+
+  <title>lexical_analyzer | Decode</title>
+  
+
+
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .motion-element,
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-title { opacity: initial; }
+
+  .use-motion .logo,
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-CN">
+
+  <div class="container sidebar-position-left">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta">
+
+    <div class="custom-logo-site-title">
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">Decode</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+        <p class="site-subtitle">programming blog by huangsunyang</p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button aria-label="切换导航栏">
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+
+<nav class="site-nav">
+  
+  <ul id="menu" class="menu">
+      
+      
+      
+        
+        <li class="menu-item menu-item-home">
+      
+    
+
+    <a href="/" rel="section"><i class="menu-item-icon fa fa-fw fa-home"></i> <br>首页</a>
+
+  </li>
+      
+      
+      
+        
+        <li class="menu-item menu-item-about">
+      
+    
+
+    <a href="/about/" rel="section"><i class="menu-item-icon fa fa-fw fa-user"></i> <br>关于</a>
+
+  </li>
+      
+      
+      
+        
+        <li class="menu-item menu-item-tags">
+      
+    
+
+    <a href="/tags/" rel="section"><i class="menu-item-icon fa fa-fw fa-tags"></i> <br>标签</a>
+
+  </li>
+      
+      
+      
+        
+        <li class="menu-item menu-item-categories">
+      
+    
+
+    <a href="/categories/" rel="section"><i class="menu-item-icon fa fa-fw fa-th"></i> <br>分类</a>
+
+  </li>
+      
+      
+      
+        
+        <li class="menu-item menu-item-archives">
+      
+    
+
+    <a href="/archives/" rel="section"><i class="menu-item-icon fa fa-fw fa-archive"></i> <br>归档</a>
+
+  </li>
+  </ul>
+
+    
+
+</nav>
+</div>
+    </header>
+
+    
+
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content page-post-detail">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://huangsunyang.com/2019/08/10/lexical-analyzer/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="_huang">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Decode">
+    </span>
+      <header class="post-header">
+
+        
+          <h1 class="post-title" itemprop="name headline">lexical_analyzer
+
+            
+          </h1>
+        
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              
+                
+              
+
+              <time title="创建时间：2019-08-10 21:31:54 / 修改时间：22:54:51" itemprop="dateCreated datePublished" datetime="2019-08-10T21:31:54+08:00">2019-08-10</time>
+            </span>
+          
+            
+
+            
+          
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing"><a href="/categories/编译原理/" itemprop="url" rel="index"><span itemprop="name">编译原理</span></a></span>
+
+                
+                
+              
+            </span>
+          
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <h3 id="一些无关的感想"><a href="#一些无关的感想" class="headerlink" title="一些无关的感想"></a>一些无关的感想</h3><p>最近在看编译原理龙书，词法分析一章看的差不多了，但仍然处于一种似懂非懂的状态，这又让我想起，大学期末考试之前复习的时候，反而是我能够真正将所有知识串联起来，融汇贯通的时候，这也就是总结和复习的重要性，因而萌生了将最近的所学所想总结一下的想法。另外，这两天忙里偷闲一直在看<a href="https://blog.codingnow.com/" target="_blank" rel="noopener">云风的博客</a>，十分佩服，更加坚定了总结与记录的念头。</p>
+<h3 id="词法分析的作用"><a href="#词法分析的作用" class="headerlink" title="词法分析的作用"></a>词法分析的作用</h3><p>词法分析是编译过程的第一阶段，它接触到的是第一手的程序源代码。它只处理词法而不处理语法，也就是他不在意串的含义，只在意串的<strong>模式</strong>，但实际上这是一种简化，因为计算机识别不了语义，只能用转化为识别模式。就像收营员结账用的条形码扫描机，扫描机并不知道你买的到底是什么东西，它只知道符合某种<strong>模式</strong>的条形码，以此来区分不同类型的物品。而不同的物品有不同的条形码这样的前提条件，也就是不同语义的串有不同的模式，是需要设计者来保证的。</p>
+<p>也就是说，词法分析的作用是识别出程序代码中具有某种模式的串。再类比一下，就是从一串潘多拉手链中识别出每颗珠子的类型。（注意珠子之间可能有联系，可能多颗珠子合起来才是一个配件）<br><img src="pandora.jpg" alt="潘多拉手链"></p>
+<p>举个例子，一行C代码经过词法分析器，会得到一组分散的<strong>词法单元</strong>序列</p>
+<ul>
+<li>input<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">printf</span>(<span class="string">"%d"</span>, a);</span><br></pre></td></tr></table></figure>
+</li>
+</ul>
+<a id="more"></a>
+<ul>
+<li>output<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">&lt;printf, id&gt; &lt;(&gt; &lt;%d, literal&gt; &lt;,&gt; &lt;a, id&gt; &lt;)&gt; &lt;;&gt;</span><br></pre></td></tr></table></figure>
+</li>
+</ul>
+<p>output中的每个尖括号内都是一组词法单元，也就是这个串的含义和它的类型。printf和a都是变量名，这里用id来表示类型，%d是一个字符串常量，这里用literal来表示类型。其他的符号的类型只包含他们自身，因此省略了类型这一项，因为他们的值和类型可以是一样的。类型更加专业的描述为<strong>词法单元名</strong>，值更专业的描述为<strong>属性</strong>，而对应这个词法单元的原串称为<strong>词素</strong>。</p>
+<h3 id="如何描述一种模式？"><a href="#如何描述一种模式？" class="headerlink" title="如何描述一种模式？"></a>如何描述一种模式？</h3><p>看到刚才的那一行代码，为什么认为prinf是一个词素？因为C的变量名需要满足以下条件：</p>
+<ul>
+<li>只包含下划线，字母或者数字</li>
+<li>必须以下划线或者字母开头<br>当我们遇到(的时候，可以确定变量名已经结束了。</li>
+</ul>
+<h4 id="正则表达式"><a href="#正则表达式" class="headerlink" title="正则表达式"></a>正则表达式</h4><p>正则表达式是一种用来描述词素模式的重要方法，C中变量的模式对应在正则表达式中即<code>[_a-zA-Z][_a-zA-Z0-9]*</code>。即使不熟悉正则表达式，我们也可以发现它将<strong>我们对模式的描述</strong>转化成了类数学语言。其中[]中括起来代表在其中任选一个，*代表0个或者多个重复。</p>
+
+    </div>
+
+    
+    
+    
+        
+      
+
+      <footer class="post-footer">
+          
+            
+          
+          <div class="post-tags">
+            
+              <a href="/tags/编译原理/" rel="tag"># 编译原理</a>
+            
+              <a href="/tags/词法分析/" rel="tag"># 词法分析</a>
+            
+          </div>
+        
+
+        
+
+          <div class="post-nav">
+            <div class="post-nav-next post-nav-item">
+              
+                <a href="/2019/08/10/hello-hexo-2/" rel="next" title="Hello Hexo II">
+                  <i class="fa fa-chevron-left"></i> Hello Hexo II
+                </a>
+              
+            </div>
+
+            <span class="post-nav-divider"></span>
+
+            <div class="post-nav-prev post-nav-item">
+              
+                <a href="/2019/08/10/lexical-analyzer/" rel="prev" title="">
+                   <i class="fa fa-chevron-right"></i>
+                </a>
+              
+            </div>
+          </div>
+        
+      </footer>
+    
+  </div>
+  
+  
+  
+  </article>
+
+  </div>
+
+
+          </div>
+          
+
+        </div>
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+  <p class="site-author-name" itemprop="name">_huang</p>
+  <div class="site-description motion-element" itemprop="description"></div>
+</div>
+  <nav class="site-state motion-element">
+      <div class="site-state-item site-state-posts">
+        
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">4</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+    
+      
+      
+      <div class="site-state-item site-state-categories">
+        
+          
+            <a href="/categories/">
+          
+        
+        
+        
+          
+        
+          
+        
+        <span class="site-state-item-count">2</span>
+        <span class="site-state-item-name">分类</span>
+        </a>
+      </div>
+    
+      
+      
+      <div class="site-state-item site-state-tags">
+        
+          
+            <a href="/tags/">
+          
+        
+        
+        
+          
+        
+          
+        
+          
+        
+          
+        
+        <span class="site-state-item-count">4</span>
+        <span class="site-state-item-name">标签</span>
+        </a>
+      </div>
+    
+  </nav>
+
+
+
+        </div>
+      </div>
+      <!--noindex-->
+        <div class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+            
+            
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#一些无关的感想"><span class="nav-number">1.</span> <span class="nav-text">一些无关的感想</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#词法分析的作用"><span class="nav-number">2.</span> <span class="nav-text">词法分析的作用</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#如何描述一种模式？"><span class="nav-number">3.</span> <span class="nav-text">如何描述一种模式？</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#正则表达式"><span class="nav-number">3.1.</span> <span class="nav-text">正则表达式</span></a></li></ol></li></ol></div>
+            
+
+          </div>
+        </div>
+      <!--/noindex-->
+      
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; <span itemprop="copyrightYear">2019</span>
+  <span class="with-love" id="animate">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">_huang</span>
+</div>
+  <div class="powered-by">由 <a href="https://hexo.io" class="theme-link" rel="noopener" target="_blank">Hexo</a> 强力驱动 v3.9.0</div>
+  <span class="post-meta-divider">|</span>
+  <div class="theme-info">主题 – <a href="https://theme-next.org" class="theme-link" rel="noopener" target="_blank">NexT.Muse</a> v7.3.0</div>
+
+        
+
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+      </div>
+
+    
+
+  </div>
+
+  
+  <script src="/lib/jquery/index.js?v=3.4.1"></script>
+  <script src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  <script src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+<script src="/js/utils.js?v=7.3.0"></script>
+  <script src="/js/motion.js?v=7.3.0"></script>
+
+
+  <script src="/js/schemes/muse.js?v=7.3.0"></script>
+
+
+<script src="/js/next-boot.js?v=7.3.0"></script>
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+
+
+  
+  <script src="/js/scrollspy.js?v=7.3.0"></script>
+<script src="/js/post-details.js?v=7.3.0"></script>
+
+
+</body>
+</html>
