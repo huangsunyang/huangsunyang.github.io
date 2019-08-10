@@ -1,11 +1,9 @@
 ---
 title: Hello Hexo II
 date: 2019-08-10 17:26:38
-categories: 
-- 日常工具
-tags:
-- Hexo
-- 博客
+categories: 日常工具
+tags: [Hexo, 博客]
+mathjax: true
 ---
 
 ### 前言
@@ -91,3 +89,40 @@ type: "tags"	# 加这一行
 
 ![图片显示名称](pic_1.jpg)
 ```
+
+### 插入公式
+由于我使用了Next主题，其中已经集成了mathjax公式，首先在`/themes/_config.yml`中将math的开关打开
+
+```
+# Math Equations Render Support
+math:
+  enable: true
+
+  # Default (true) will load mathjax / katex script on demand.
+  # That is it only render those page which has `mathjax: true` in Front-matter.
+  # If you set it to false, it will load mathjax / katex srcipt EVERY PAGE.
+  per_page: true
+```
+
+注意到`per_page`开关打开，我们需要在每篇post中指定`mathjax: true`，才会开启公式，这样就不影响别的页面的渲染速度
+
+现在页面中就可以添加公式了，比如本文中就添加了如下公式
+```
+$$
+P = \frac
+{\sum_{i=1}^n (x_i- x)(y_i- y)}
+{\displaystyle \left[
+\sum_{i=1}^n (x_i-x)^2
+\sum_{i=1}^n (y_i-y)^2
+\right]^{1/2} }
+$$
+```
+
+$$
+P = \frac
+{\sum_{i=1}^n (x_i- x)(y_i- y)}
+{\displaystyle \left[
+\sum_{i=1}^n (x_i-x)^2
+\sum_{i=1}^n (y_i-y)^2
+\right]^{1/2} }
+$$
