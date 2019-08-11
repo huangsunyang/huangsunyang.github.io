@@ -78,6 +78,10 @@ digraph G {
         6 -> 8 [label=b];
         7 -> 8 [label=a];
         8 -> 8 [label="a, b"];
+        5 [label=0];
+        6 [label=1];
+        7 [label=2];
+        8 [label=3];
         label = "表示aa\*|bb\*的DFA";
     }
 }
