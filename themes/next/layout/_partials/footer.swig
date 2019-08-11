@@ -58,3 +58,31 @@
 {%- for inject_item in theme.injects.footer %}
   {{ partial(inject_item.layout, inject_item.locals, inject_item.options) }}
 {%- endfor %}
+
+{% if theme.graphviz.enable %}
+  <script src='https://cdnjs.cloudflare.com/ajax/libs/viz.js/1.7.1/viz.js'></script>
+  <script>
+    String.prototype.chineseChar2englishChar = function chineseChar2englishChar(){
+    // 将单引号‘’都转换成'，将双引号“”都转换成"
+    var str = this.replace(/\’|\‘/g,"'").replace(/\“|\”/g,"\"");
+    // 将中括号【】转换成[]，将大括号｛｝转换成{}
+    str = str.replace(/\【/g,"[").replace(/\】/g,"]").replace(/\｛/g,"{").replace(/\｝/g,"}");
+    // 将逗号，转换成,，将：转换成:
+    str = str.replace(/，/g,",").replace(/：/g,":");
+    return str;
+}
+
+    let vizObjects = document.querySelectorAll('.graphviz')
+
+    for (let item of vizObjects) {
+      item.parentNode.style.textAlign = "center"
+      let svg = undefined
+      try {
+        svg = Viz(item.textContent.chineseChar2englishChar(), 'svg')
+      } catch(e) {
+        svg = `<pre class="error">${item.textContent}</pre>`
+      }
+      item.outerHTML = svg
+    }
+  </script>
+{% endif %}

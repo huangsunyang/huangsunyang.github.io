@@ -134,7 +134,7 @@ npm install hexo-symbols-count-time --save
 ```
 
 然后更改`themes/next/_config.yml`中的配置
-```
+```config
 # Post wordcount display settings
 # Dependencies: https://github.com/theme-next/hexo-symbols-count-time
 symbols_count_time:
@@ -154,4 +154,74 @@ symbols_count_time:
   total_symbols: true
   total_time: true
   exclude_codeblock: false
+```
+
+### 在Hexo中使用Graphviz
+半夜在[官网](https://hexo.io/plugins/)发现了[这个插件](https://github.com/sounak98/hexo-graphviz)，赶紧下载了试了试，第一步当然还是安装插件
+```
+npm install hexo-graphviz --save
+```
+
+然后在`/_config.yml`中添加
+```
+# hexo-graphviz
+graphviz:
+  enable: true
+```
+
+此外还需要修改`/themes/next/layout/_partials/footer.swig`，在最后添加
+```javascript
+{% if theme.graphviz.enable %}
+  <script src='https://cdnjs.cloudflare.com/ajax/libs/viz.js/1.7.1/viz.js'></script>
+  <script>
+    String.prototype.chineseChar2englishChar = function chineseChar2englishChar(){
+    // 将单引号‘’都转换成'，将双引号“”都转换成"
+    var str = this.replace(/\’|\‘/g,"'").replace(/\“|\”/g,"\"");
+    // 将中括号【】转换成[]，将大括号｛｝转换成{}
+    str = str.replace(/\【/g,"[").replace(/\】/g,"]").replace(/\｛/g,"{").replace(/\｝/g,"}");
+    // 将逗号，转换成,，将：转换成:
+    str = str.replace(/，/g,",").replace(/：/g,":");
+    return str;
+}
+
+    let vizObjects = document.querySelectorAll('.graphviz')
+
+    for (let item of vizObjects) {
+      item.parentNode.style.textAlign = "center"
+      let svg = undefined
+      try {
+        svg = Viz(item.textContent.chineseChar2englishChar(), 'svg')
+      } catch(e) {
+        svg = `<pre class="error">${item.textContent}</pre>`
+      }
+      item.outerHTML = svg
+    }
+  </script>
+{% endif %}
+```
+
+
+使用的时候代码块中指定语言为graphviz即可，效果如下
+
+```graphviz
+digraph finite_state_machine {
+  rankdir=LR;
+  size="8,5"
+  node [shape = doublecircle]; LR_0 LR_3 LR_4 LR_8;
+  node [shape = circle];
+  LR_0 -> LR_2 [ label = "SS(B)" ];
+  LR_0 -> LR_1 [ label = "SS(S)" ];
+  LR_1 -> LR_3 [ label = "S($end)" ];
+  LR_2 -> LR_6 [ label = "SS(b)" ];
+  LR_2 -> LR_5 [ label = "SS(a)" ];
+  LR_2 -> LR_4 [ label = "S(A)" ];
+  LR_5 -> LR_7 [ label = "S(b)" ];
+  LR_5 -> LR_5 [ label = "S(a)" ];
+  LR_6 -> LR_6 [ label = "S(b)" ];
+  LR_6 -> LR_5 [ label = "S(a)" ];
+  LR_7 -> LR_8 [ label = "S(b)" ];
+  LR_7 -> LR_5 [ label = "S(a)" ];
+  LR_8 -> LR_6 [ label = "S(b)" ];
+  LR_8 -> LR_5 [ label = "S(a)" ];
+}
 ```
