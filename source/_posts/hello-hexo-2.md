@@ -170,7 +170,7 @@ graphviz:
 ```
 
 此外还需要修改`/themes/next/layout/_partials/footer.swig`，在最后添加
-```javascript
+```
 {% if theme.graphviz.enable %}
   <script src='https://cdnjs.cloudflare.com/ajax/libs/viz.js/1.7.1/viz.js'></script>
   <script>
