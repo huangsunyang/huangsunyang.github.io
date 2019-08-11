@@ -501,16 +501,44 @@
     <span class="post-meta-item-icon">
       <i class="fa fa-area-chart"></i>
     </span>
-    <span title="站点总字数">6k</span>
+    <span title="站点总字数">8k</span>
     <span class="post-meta-divider">|</span>
     <span class="post-meta-item-icon">
       <i class="fa fa-coffee"></i>
     </span>
-    <span title="站点阅读时长">30 分钟</span>
+    <span title="站点阅读时长">40 分钟</span>
 </div>
   <div class="powered-by">由 <a href="https://hexo.io" class="theme-link" rel="noopener" target="_blank">Hexo</a> 强力驱动 v3.9.0</div>
   <span class="post-meta-divider">|</span>
   <div class="theme-info">主题 – <a href="https://theme-next.org" class="theme-link" rel="noopener" target="_blank">NexT.Muse</a> v7.3.0</div>
+
+
+  <script src='https://cdnjs.cloudflare.com/ajax/libs/viz.js/1.7.1/viz.js'></script>
+  <script>
+    String.prototype.chineseChar2englishChar = function chineseChar2englishChar(){
+    // 将单引号‘’都转换成'，将双引号“”都转换成"
+    var str = this.replace(/\’|\‘/g,"'").replace(/\“|\”/g,"\"");
+    // 将中括号【】转换成[]，将大括号｛｝转换成{}
+    str = str.replace(/\【/g,"[").replace(/\】/g,"]").replace(/\｛/g,"{").replace(/\｝/g,"}");
+    // 将逗号，转换成,，将：转换成:
+    str = str.replace(/，/g,",").replace(/：/g,":");
+    return str;
+}
+
+    let vizObjects = document.querySelectorAll('.graphviz')
+
+    for (let item of vizObjects) {
+      item.parentNode.style.textAlign = "center"
+      let svg = undefined
+      try {
+        svg = Viz(item.textContent.chineseChar2englishChar(), 'svg')
+      } catch(e) {
+        svg = `<pre class="error">${item.textContent}</pre>`
+      }
+      item.outerHTML = svg
+    }
+  </script>
+
 
         
 
