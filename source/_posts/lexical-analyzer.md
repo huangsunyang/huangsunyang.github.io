@@ -177,4 +177,5 @@ def NFA_to_DFA(NFA_Move, char_set, s, T):
             if T not in DFA_States:
                 queue.put(T)
                 DFA_Move[S][char].append(T)
+    return DFA_Move
 ```
