@@ -100,3 +100,19 @@ digraph G {
 这个证明的过程同时也是将正则表达式程序化的过程，通过`词法单元的模式->正则表达式->NFA->DFA->状态转移表`的转换，很容易生成对应的程序代码。
 
 #### 从NFA到DFA
+NFA和DFA的主要区别如下：
+- 存在ε转移
+- 节点可以不支持某些字符的转移
+
+定义`trans_dict[s]`为从s出发的边到对应状态的字典，`trans_dict[s][t] = ε`说明从s到t存在一条标记为E的边。定义closure(s)为所有从状态s可通过如果次ε转移到达的状态集合:
+```python
+def closure(s):
+	from queue import Queue
+    collection = Queue()
+    collection.put(s)
+    while not collection.empty():
+    	from_state = collection.get()
+    	for to_state in trans_dict.get(top, {}):
+    		if trans_dict[from_state][to_state] == 'ε' and not in_dict[to_state]:
+    			collection.put(to_state)
+```
