@@ -100,3 +100,81 @@ digraph G {
 这个证明的过程同时也是将正则表达式程序化的过程，通过`词法单元的模式->正则表达式->NFA->DFA->状态转移表`的转换，很容易生成对应的程序代码。
 
 #### 从NFA到DFA
+
+NFA和DFA最主要的区别在于以下两点：
+- 存在ε转移
+- 节点可以不存在某些转移
+
+在开始之前，我们需要明确一个有穷自动机的描述方式，这里使用一个二维的字典`Move`来描述
+```
+Move = {
+    from_state_1: {
+        edge_char_1: [to_state_1, to_state_2, ...],
+        edge_char_2: [to_state_1, to_state_2, ...],
+        edge_char_3: ...,
+    },
+    from_state_2: ...
+}
+```
+
+首先，对于ε转移，如果从状态s到状态t存在一条全是ε的路径，那么在接收字符的时候需要既可以s出发也可以从t出发。对于一个特定的状态s，我们希望计算出所有可能的t满足上述条件，这样的集合被称为s的ε-闭包，这可以使BFS来解决，这里给出类python的伪代码
+```python
+from queue import Queue
+
+def ε-closure(s):
+    queue = Queue(s)        # BFS维护的队列
+    collection = set()      # 最后返回的ε-闭包集合
+
+    while not queue.empty():
+        start_state = queue.get()
+        collection.add(start_state)
+        for end_state in Move[start_state][ε]:
+            if end_state not in collection:
+                queue.put(end_state)
+
+    return collection
+```
+
+
+对于NFA的初始状态s，实际上接受的字符串可以从ε-closure(s)集合中的任一状态出发，对于一个确定的集合S = ε-closure(s)，和一个确定的字符char，我们总可以得到一个确定的状态T，状态T即从S中的任意状态，接受字符char可到达的状态的集合，计算T的伪代码如下：
+
+```python
+def Trans(S, char):
+    T = set()
+    for s in S:
+        end_states = Move[s][char]
+        for end_state in end_states:
+            end_state_closure = ε-closure(end_state)
+            T = T.union(end_state_closure)
+    return T
+```
+
+很明显，对于一个确定的S和一个确定的char，得到的T也一定是确定的，这和DFA是否非常类似？我们可以把NFA中的一组状态的集合看作DFA中的一个状态，从而将NFA转化成DFA。得到大方向之后，还有几个细节需要补充：
+- 对于DFA中的一个状态s，和一个字符char，如果s没有接受char的转移，那么`Move[s][char] = None`
+- None的闭包是一个空集合，即`ε-closure(None) = set()`
+- 假设NFA的起始状态是S，那么DFA的起始状态`S' = ε-closure(S)`
+- 假设NFA的接受状态是T1,T2...Tn，那么对于DFA中的一个状态S，如果其包含T1...Tn中任意一个状态，S就是DFA中的一个接受状态
+
+基于以上结论，我们不难给出NFA转换为DFA的伪代码
+```python
+def NFA_to_DFA(NFA_Move, char_set, s, T):
+    """
+    char_set: NFA的字符集
+    s: NFA的起始状态
+    T: NFA的接受状态集合
+    """
+    DFA_Move = {}
+    DFA_States = set()
+
+    start_state = ε-closure(s)
+    queue = Queue(start_state)
+
+    while not queue.empty():
+        S = queue.get()
+        DFA_States.add(S)
+        for char in char_set:
+            T = Trans(S, char)
+            if T not in DFA_States:
+                queue.put(T)
+                DFA_Move[S][char].append(T)
+```
