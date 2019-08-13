@@ -64,7 +64,7 @@
 <meta property="og:description" content="一些无关的感想最近在看编译原理龙书，词法分析一章看的差不多了，但仍然处于一种似懂非懂的状态，这又让我想起，大学期末考试之前复习的时候，反而是我能够真正将所有知识串联起来，融汇贯通的时候，这也就是总结和复习的重要性，因而萌生了将最近的所学所想总结一下的想法。另外，这两天忙里偷闲一直在看云风的博客，十分佩服，更加坚定了总结与记录的念头。 词法分析的作用词法分析是编译过程的第一阶段，它接触到的是第一手的">
 <meta property="og:locale" content="zh-CN">
 <meta property="og:image" content="http://huangsunyang.com/2019/08/10/lexical-analyzer/pandora.jpg">
-<meta property="og:updated_time" content="2019-08-11T16:45:31.454Z">
+<meta property="og:updated_time" content="2019-08-13T15:38:13.892Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Lexical Analyzer">
 <meta name="twitter:description" content="一些无关的感想最近在看编译原理龙书，词法分析一章看的差不多了，但仍然处于一种似懂非懂的状态，这又让我想起，大学期末考试之前复习的时候，反而是我能够真正将所有知识串联起来，融汇贯通的时候，这也就是总结和复习的重要性，因而萌生了将最近的所学所想总结一下的想法。另外，这两天忙里偷闲一直在看云风的博客，十分佩服，更加坚定了总结与记录的念头。 词法分析的作用词法分析是编译过程的第一阶段，它接触到的是第一手的">
@@ -275,7 +275,7 @@
                   <i class="fa fa-calendar-check-o"></i>
                 </span>
                 <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2019-08-12 00:45:31" itemprop="dateModified" datetime="2019-08-12T00:45:31+08:00">2019-08-12</time>
+                <time title="修改时间：2019-08-13 23:38:13" itemprop="dateModified" datetime="2019-08-13T23:38:13+08:00">2019-08-13</time>
               </span>
             
           
@@ -302,7 +302,7 @@
               
                 <span class="post-meta-item-text">本文字数：</span>
               
-              <span>2.4k</span>
+              <span>4.3k</span>
             </span>
           
             <span class="post-meta-item" title="阅读时长">
@@ -312,7 +312,7 @@
               
                 <span class="post-meta-item-text">阅读时长 &asymp;</span>
               
-              <span>12 分钟</span>
+              <span>22 分钟</span>
             </span>
           
 
@@ -363,7 +363,24 @@
 <li>证明对任意一个正则表达式都能够构造出一个等价的NFA</li>
 </ul>
 <p>这个证明的过程同时也是将正则表达式程序化的过程，通过<code>词法单元的模式-&gt;正则表达式-&gt;NFA-&gt;DFA-&gt;状态转移表</code>的转换，很容易生成对应的程序代码。</p>
-<h4 id="从NFA到DFA"><a href="#从NFA到DFA" class="headerlink" title="从NFA到DFA"></a>从NFA到DFA</h4>
+<h4 id="从NFA到DFA"><a href="#从NFA到DFA" class="headerlink" title="从NFA到DFA"></a>从NFA到DFA</h4><p>NFA和DFA最主要的区别在于以下两点：</p>
+<ul>
+<li>存在ε转移</li>
+<li>节点可以不存在某些转移</li>
+</ul>
+<p>在开始之前，我们需要明确一个有穷自动机的描述方式，这里使用一个二维的字典<code>Move</code>来描述<br><figure class="highlight dts"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">Move = &#123;</span><br><span class="line"><span class="symbol">    from_state_1:</span> &#123;</span><br><span class="line"><span class="symbol">        edge_char_1:</span> [to_state_1, to_state_2, ...],</span><br><span class="line"><span class="symbol">        edge_char_2:</span> [to_state_1, to_state_2, ...],</span><br><span class="line"><span class="symbol">        edge_char_3:</span> ...,</span><br><span class="line">    &#125;,</span><br><span class="line"><span class="symbol">    from_state_2:</span> ...</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>首先，对于ε转移，如果从状态s到状态t存在一条全是ε的路径，那么在接收字符的时候需要既可以s出发也可以从t出发。对于一个特定的状态s，我们希望计算出所有可能的t满足上述条件，这样的集合被称为s的ε-闭包，这可以使BFS来解决，这里给出类python的伪代码<br><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">from</span> queue <span class="keyword">import</span> Queue</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> ε-<span class="title">closure</span><span class="params">(s)</span>:</span></span><br><span class="line">    queue = Queue(s)        <span class="comment"># BFS维护的队列</span></span><br><span class="line">    collection = set()      <span class="comment"># 最后返回的ε-闭包集合</span></span><br><span class="line"></span><br><span class="line">    <span class="keyword">while</span> <span class="keyword">not</span> queue.empty():</span><br><span class="line">        start_state = queue.get()</span><br><span class="line">        collection.add(start_state)</span><br><span class="line">        <span class="keyword">for</span> end_state <span class="keyword">in</span> Move[start_state][ε]:</span><br><span class="line">            <span class="keyword">if</span> end_state <span class="keyword">not</span> <span class="keyword">in</span> collection:</span><br><span class="line">                queue.put(end_state)</span><br><span class="line"></span><br><span class="line">    <span class="keyword">return</span> collection</span><br></pre></td></tr></table></figure></p>
+<p>对于NFA的初始状态s，实际上接受的字符串可以从ε-closure(s)集合中的任一状态出发，对于一个确定的集合S = ε-closure(s)，和一个确定的字符char，我们总可以得到一个确定的状态T，状态T即从S中的任意状态，接受字符char可到达的状态的集合，计算T的伪代码如下：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">Trans</span><span class="params">(S, char)</span>:</span></span><br><span class="line">    T = set()</span><br><span class="line">    <span class="keyword">for</span> s <span class="keyword">in</span> S:</span><br><span class="line">        end_states = Move[s][char]</span><br><span class="line">        <span class="keyword">for</span> end_state <span class="keyword">in</span> end_states:</span><br><span class="line">            end_state_closure = ε-closure(end_state)</span><br><span class="line">            T = T.union(end_state_closure)</span><br><span class="line">    <span class="keyword">return</span> T</span><br></pre></td></tr></table></figure>
+<p>很明显，对于一个确定的S和一个确定的char，得到的T也一定是确定的，这和DFA是否非常类似？我们可以把NFA中的一组状态的集合看作DFA中的一个状态，从而将NFA转化成DFA。得到大方向之后，还有几个细节需要补充：</p>
+<ul>
+<li>对于DFA中的一个状态s，和一个字符char，如果s没有接受char的转移，那么<code>Move[s][char] = None</code></li>
+<li>None的闭包是一个空集合，即<code>ε-closure(None) = set()</code></li>
+<li>假设NFA的起始状态是S，那么DFA的起始状态<code>S&#39; = ε-closure(S)</code></li>
+<li>假设NFA的接受状态是T1,T2…Tn，那么对于DFA中的一个状态S，如果其包含T1…Tn中任意一个状态，S就是DFA中的一个接受状态</li>
+</ul>
+<p>基于以上结论，我们不难给出NFA转换为DFA的伪代码<br><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">NFA_to_DFA</span><span class="params">(NFA_Move, char_set, s, T)</span>:</span></span><br><span class="line">    <span class="string">"""</span></span><br><span class="line"><span class="string">    char_set: NFA的字符集</span></span><br><span class="line"><span class="string">    s: NFA的起始状态</span></span><br><span class="line"><span class="string">    T: NFA的接受状态集合</span></span><br><span class="line"><span class="string">    """</span></span><br><span class="line">    DFA_Move = &#123;&#125;</span><br><span class="line">    DFA_States = set()</span><br><span class="line"></span><br><span class="line">    start_state = ε-closure(s)</span><br><span class="line">    queue = Queue(start_state)</span><br><span class="line"></span><br><span class="line">    <span class="keyword">while</span> <span class="keyword">not</span> queue.empty():</span><br><span class="line">        S = queue.get()</span><br><span class="line">        DFA_States.add(S)</span><br><span class="line">        <span class="keyword">for</span> char <span class="keyword">in</span> char_set:</span><br><span class="line">            T = Trans(S, char)</span><br><span class="line">            <span class="keyword">if</span> T <span class="keyword">not</span> <span class="keyword">in</span> DFA_States:</span><br><span class="line">                queue.put(T)</span><br><span class="line">                DFA_Move[S][char].append(T)</span><br></pre></td></tr></table></figure></p>
+
     </div>
 
     
@@ -569,12 +586,12 @@
     <span class="post-meta-item-icon">
       <i class="fa fa-area-chart"></i>
     </span>
-    <span title="站点总字数">9k</span>
+    <span title="站点总字数">11k</span>
     <span class="post-meta-divider">|</span>
     <span class="post-meta-item-icon">
       <i class="fa fa-coffee"></i>
     </span>
-    <span title="站点阅读时长">46 分钟</span>
+    <span title="站点阅读时长">56 分钟</span>
 </div>
   <div class="powered-by">由 <a href="https://hexo.io" class="theme-link" rel="noopener" target="_blank">Hexo</a> 强力驱动 v3.9.0</div>
   <span class="post-meta-divider">|</span>
