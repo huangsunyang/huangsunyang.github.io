@@ -63,7 +63,7 @@
 <meta property="og:site_name" content="Decode">
 <meta property="og:description" content="前言新开了一个分类，来学习python源码。python源码的结构还是比较清晰，刚开始我们可以从Objects目录入手，该目录下存放的是python中内置对象的实现(built-in objects)，所谓的内置对象，其实就是cpython中用c实现的对象。我们可以从一个比较简单的基本对象tuple入手，来了解一下python对象的实现。 tuple对象的定义tuple对象的定义位于Include">
 <meta property="og:locale" content="zh-CN">
-<meta property="og:updated_time" content="2019-09-01T08:33:39.264Z">
+<meta property="og:updated_time" content="2019-09-01T08:35:22.066Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="CPython Tuple Object">
 <meta name="twitter:description" content="前言新开了一个分类，来学习python源码。python源码的结构还是比较清晰，刚开始我们可以从Objects目录入手，该目录下存放的是python中内置对象的实现(built-in objects)，所谓的内置对象，其实就是cpython中用c实现的对象。我们可以从一个比较简单的基本对象tuple入手，来了解一下python对象的实现。 tuple对象的定义tuple对象的定义位于Include">
@@ -262,7 +262,7 @@
                 
               
 
-              <time title="创建时间：2019-09-01 14:43:46 / 修改时间：16:33:39" itemprop="dateCreated datePublished" datetime="2019-09-01T14:43:46+08:00">2019-09-01</time>
+              <time title="创建时间：2019-09-01 14:43:46 / 修改时间：16:35:22" itemprop="dateCreated datePublished" datetime="2019-09-01T14:43:46+08:00">2019-09-01</time>
             </span>
           
             
@@ -318,6 +318,7 @@
         <h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>新开了一个分类，来学习python源码。python源码的结构还是比较清晰，刚开始我们可以从Objects目录入手，该目录下存放的是python中内置对象的实现(<code>built-in objects</code>)，所谓的内置对象，其实就是cpython中用c实现的对象。我们可以从一个比较简单的基本对象<code>tuple</code>入手，来了解一下python对象的实现。</p>
 <h3 id="tuple对象的定义"><a href="#tuple对象的定义" class="headerlink" title="tuple对象的定义"></a>tuple对象的定义</h3><p>tuple对象的定义位于<code>Include/tupleobject.h</code>中，这是一种c语言中声明可变长度对象的常用做法，即在结构体末尾声明一个长度为1的数组，在申请内存的时候，多申请的内存都会作为该数组的存储空间。可以看出，tuple中存储的python对象是直接放置在结构体中的，而list由于其是可变的，其只存放了指向python对象的指针。</p>
 <figure class="highlight xquery"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">typedef struct &#123;</span><br><span class="line">    PyObject_VAR_HEAD</span><br><span class="line">    PyObject *ob_item[<span class="number">1</span>];</span><br><span class="line"></span><br><span class="line">    /* ob_item<span class="built_in"> contains</span> space <span class="keyword">for</span> <span class="string">'ob_size'</span> elements.</span><br><span class="line">     * Items must normally<span class="built_in"> not</span> be NULL, <span class="keyword">except</span> during <span class="type">construction</span> <span class="keyword">when</span></span><br><span class="line">     * the tuple <span class="literal">is</span><span class="built_in"> not</span> yet visible outside the <span class="keyword">function</span> that builds it.</span><br><span class="line">     */</span><br><span class="line">&#125; PyTupleObject;</span><br></pre></td></tr></table></figure>
+<a id="more"></a>
 <h3 id="tuple对象的复用机制"><a href="#tuple对象的复用机制" class="headerlink" title="tuple对象的复用机制"></a>tuple对象的复用机制</h3><p>python为了提高性能，在很多对象中都使用了复用机制，tuple的复用相对来说也较为简单易懂。首先，决定复用机制的参数使用宏来定义，其结构实际上是多个链表，每个链表存放的都是成员数量一样的tuple。</p>
 <p>乍看之下我们可能会觉得奇怪，因为下面的代码中我们也没有看到链表结构的定义。实际上，这里有一个小trick，指向下一个对象的指针放在了tuple对象的第一个成员中，即<code>ob_item[0]</code>中，由于free_list中的对象都是销毁时放置的对象，<code>ob_item</code>中的指针并没有实际意义。</p>
 <p>另外，空的tuple对象并不需要通过链表管理，全局只存在一个空的tuple对象，即在<code>free_list[0]</code>中。</p>
