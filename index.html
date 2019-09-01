@@ -225,6 +225,132 @@
   
   
   <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://huangsunyang.com/2019/09/01/build-python/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="_huang">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/portrait.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Decode">
+    </span>
+      <header class="post-header">
+
+        
+          <h1 class="post-title" itemprop="name headline">
+              
+              <a href="/2019/09/01/build-python/" class="post-title-link" itemprop="url">Build Python</a>
+            
+          </h1>
+        
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              
+                
+              
+
+              <time title="创建时间：2019-09-01 22:02:22 / 修改时间：22:48:43" itemprop="dateCreated datePublished" datetime="2019-09-01T22:02:22+08:00">2019-09-01</time>
+            </span>
+          
+            
+
+            
+          
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing"><a href="/categories/python源码/" itemprop="url" rel="index"><span itemprop="name">python源码</span></a></span>
+
+                
+                
+              
+            </span>
+          
+
+          
+          <br>
+            <span class="post-meta-item" title="本文字数">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-file-word-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">本文字数：</span>
+              
+              <span>2k</span>
+            </span>
+          
+            <span class="post-meta-item" title="阅读时长">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-clock-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">阅读时长 &asymp;</span>
+              
+              <span>10 分钟</span>
+            </span>
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>很久之前我就尝试过编译python源码，但是最后好像以失败告终，今天偶然想起竟然异常顺利，终于把编译python源码的心愿完成了。之后就可以通过修改源码的方式来学习python了。</p>
+<p>准备工具：</p>
+<ul>
+<li><a href="https://www.python.org/downloads/release/python-2715/" target="_blank" rel="noopener">python2.7.15源码</a></li>
+<li>Windows10 sdk</li>
+</ul>
+<h2 id="步骤"><a href="#步骤" class="headerlink" title="步骤"></a>步骤</h2><p>总的来说，编译python源码其实很简单，直接进入PCBuild文件路径调用build.bat即可。但是我这里遇到了一个编译错误，估计大家也都会遇到，<a href="https://github.com/python-cmake-buildsystem/python-cmake-buildsystem/issues/161" target="_blank" rel="noopener">在github上有人给出了解决方案</a></p>
+          <!--noindex-->
+          
+            <div class="post-button text-center">
+              <a class="btn" href="/2019/09/01/build-python/#more" rel="contents">
+                阅读全文 &raquo;
+              </a>
+            </div>
+          
+          <!--/noindex-->
+        
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+          <div class="post-eof"></div>
+        
+      </footer>
+  </div>
+  
+  
+  
+  </article>
+
+    
+      
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
     <link itemprop="mainEntityOfPage" href="http://huangsunyang.com/2019/09/01/cpython-tuple-object/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -257,7 +383,7 @@
                 
               
 
-              <time title="创建时间：2019-09-01 14:43:46 / 修改时间：16:35:22" itemprop="dateCreated datePublished" datetime="2019-09-01T14:43:46+08:00">2019-09-01</time>
+              <time title="创建时间：2019-09-01 14:43:46 / 修改时间：22:48:56" itemprop="dateCreated datePublished" datetime="2019-09-01T14:43:46+08:00">2019-09-01</time>
             </span>
           
             
@@ -312,7 +438,7 @@
       
           <h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>新开了一个分类，来学习python源码。python源码的结构还是比较清晰，刚开始我们可以从Objects目录入手，该目录下存放的是python中内置对象的实现(<code>built-in objects</code>)，所谓的内置对象，其实就是cpython中用c实现的对象。我们可以从一个比较简单的基本对象<code>tuple</code>入手，来了解一下python对象的实现。</p>
 <h3 id="tuple对象的定义"><a href="#tuple对象的定义" class="headerlink" title="tuple对象的定义"></a>tuple对象的定义</h3><p>tuple对象的定义位于<code>Include/tupleobject.h</code>中，这是一种c语言中声明可变长度对象的常用做法，即在结构体末尾声明一个长度为1的数组，在申请内存的时候，多申请的内存都会作为该数组的存储空间。可以看出，tuple中存储的python对象是直接放置在结构体中的，而list由于其是可变的，其只存放了指向python对象的指针。</p>
-<figure class="highlight xquery"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">typedef struct &#123;</span><br><span class="line">    PyObject_VAR_HEAD</span><br><span class="line">    PyObject *ob_item[<span class="number">1</span>];</span><br><span class="line"></span><br><span class="line">    /* ob_item<span class="built_in"> contains</span> space <span class="keyword">for</span> <span class="string">'ob_size'</span> elements.</span><br><span class="line">     * Items must normally<span class="built_in"> not</span> be NULL, <span class="keyword">except</span> during <span class="type">construction</span> <span class="keyword">when</span></span><br><span class="line">     * the tuple <span class="literal">is</span><span class="built_in"> not</span> yet visible outside the <span class="keyword">function</span> that builds it.</span><br><span class="line">     */</span><br><span class="line">&#125; PyTupleObject;</span><br></pre></td></tr></table></figure>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">typedef</span> <span class="class"><span class="keyword">struct</span> &#123;</span></span><br><span class="line">    PyObject_VAR_HEAD</span><br><span class="line">    PyObject *ob_item[<span class="number">1</span>];</span><br><span class="line"></span><br><span class="line">    <span class="comment">/* ob_item contains space for 'ob_size' elements.</span></span><br><span class="line"><span class="comment">     * Items must normally not be NULL, except during construction when</span></span><br><span class="line"><span class="comment">     * the tuple is not yet visible outside the function that builds it.</span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line">&#125; PyTupleObject;</span><br></pre></td></tr></table></figure>
           <!--noindex-->
           
             <div class="post-button text-center">
@@ -642,7 +768,7 @@
                   <i class="fa fa-calendar-check-o"></i>
                 </span>
                 <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2019-08-13 22:10:27" itemprop="dateModified" datetime="2019-08-13T22:10:27+08:00">2019-08-13</time>
+                <time title="修改时间：2019-09-01 22:47:38" itemprop="dateModified" datetime="2019-09-01T22:47:38+08:00">2019-09-01</time>
               </span>
             
           
@@ -669,7 +795,7 @@
               
                 <span class="post-meta-item-text">本文字数：</span>
               
-              <span>5.1k</span>
+              <span>5.2k</span>
             </span>
           
             <span class="post-meta-item" title="阅读时长">
@@ -679,7 +805,7 @@
               
                 <span class="post-meta-item-text">阅读时长 &asymp;</span>
               
-              <span>25 分钟</span>
+              <span>26 分钟</span>
             </span>
           
 
@@ -694,7 +820,7 @@
       
           <h3 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h3><p><a href="https://huangsunyang.github.io/2019/08/09/hello-world/" target="_blank" rel="noopener">第一篇博客</a>大概介绍了如何在本地以及github上部署自己的hexo博客，但是人总是喜欢折腾，博客搭建完了就要考虑装修美观。我自己也稍微折腾了下，把一些踩过的坑在这里记录下</p>
 <h3 id="主题"><a href="#主题" class="headerlink" title="主题"></a>主题</h3><p>原来的主题说实话真的不太好看，主题不需要太折腾，能看就好，<a href="https://hexo.io/themes/" target="_blank" rel="noopener">Hexo官网</a>上有不少的主题，有兴趣的可以自己看demo，我用的是比较主流的<a href="https://github.com/theme-next/hexo-theme-next" target="_blank" rel="noopener">Next主题</a>，个人认为比官网上大多数看到的都要好看。</p>
-<p>主题的安装相对来说较为简单，只要把整个主题pull到本地的<code>/themes</code>目录下即可，然后修改一下<code>/_config.yml</code>，搜索<code>themes:</code>即可<br><figure class="highlight clean"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"># Extensions</span><br><span class="line">## Plugins: https:<span class="comment">//hexo.io/plugins/</span></span><br><span class="line">## Themes: https:<span class="comment">//hexo.io/themes/</span></span><br><span class="line">theme: next # 这里改成文件夹的名字</span><br></pre></td></tr></table></figure></p>
+<p>主题的安装相对来说较为简单，只要把整个主题pull到本地的<code>/themes</code>目录下即可，然后修改一下<code>/_config.yml</code>，搜索<code>themes:</code>即可<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"># Extensions</span><br><span class="line">## Plugins: https://hexo.io/plugins/</span><br><span class="line">## Themes: https://hexo.io/themes/</span><br><span class="line">theme: next # 这里改成文件夹的名字</span><br></pre></td></tr></table></figure></p>
           <!--noindex-->
           
             <div class="post-button text-center">
@@ -900,7 +1026,7 @@
         
           <a href="/archives/">
         
-          <span class="site-state-item-count">5</span>
+          <span class="site-state-item-count">6</span>
           <span class="site-state-item-name">日志</span>
         </a>
       </div>
@@ -962,7 +1088,9 @@
         
           
         
-        <span class="site-state-item-count">12</span>
+          
+        
+        <span class="site-state-item-count">13</span>
         <span class="site-state-item-name">标签</span>
         </a>
       </div>
@@ -1017,12 +1145,12 @@
     <span class="post-meta-item-icon">
       <i class="fa fa-area-chart"></i>
     </span>
-    <span title="站点总字数">16k</span>
+    <span title="站点总字数">18k</span>
     <span class="post-meta-divider">|</span>
     <span class="post-meta-item-icon">
       <i class="fa fa-coffee"></i>
     </span>
-    <span title="站点阅读时长">1:18</span>
+    <span title="站点阅读时长">1:29</span>
 </div>
   <div class="powered-by">由 <a href="https://hexo.io" class="theme-link" rel="noopener" target="_blank">Hexo</a> 强力驱动 v3.9.0</div>
   <span class="post-meta-divider">|</span>
@@ -1125,6 +1253,8 @@
   
 
   
+    
+      
     
       
     

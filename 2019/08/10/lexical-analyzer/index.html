@@ -336,7 +336,7 @@
 <figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">printf</span>(<span class="string">"%d"</span>, a);</span><br></pre></td></tr></table></figure>
 </li>
 <li><p>output</p>
-<figure class="highlight apache"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="section">&lt;printf, id&gt;</span> <span class="section">&lt;(&gt;</span> <span class="section">&lt;%d, literal&gt;</span> <span class="section">&lt;,&gt;</span> <span class="section">&lt;a, id&gt;</span> <span class="section">&lt;)&gt;</span> <span class="section">&lt;;&gt;</span></span><br></pre></td></tr></table></figure>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">&lt;printf, id&gt; &lt;(&gt; &lt;%d, literal&gt; &lt;,&gt; &lt;a, id&gt; &lt;)&gt; &lt;;&gt;</span><br></pre></td></tr></table></figure>
 </li>
 </ul>
 <p>output中的每个尖括号内都是一组词法单元，也就是这个串的含义和它的类型。printf和a都是变量名，这里用id来表示类型，%d是一个字符串常量，这里用literal来表示类型。其他的符号的类型只包含他们自身，因此省略了类型这一项，因为他们的值和类型可以是一样的。类型更加专业的描述为<strong>词法单元名</strong>，值更专业的描述为<strong>属性</strong>，而对应这个词法单元的原串称为<strong>词素</strong>。</p>
@@ -368,7 +368,7 @@
 <li>存在ε转移</li>
 <li>节点可以不存在某些转移</li>
 </ul>
-<p>在开始之前，我们需要明确一个有穷自动机的描述方式，这里使用一个二维的字典<code>Move</code>来描述<br><figure class="highlight dts"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">Move = &#123;</span><br><span class="line"><span class="symbol">    from_state_1:</span> &#123;</span><br><span class="line"><span class="symbol">        edge_char_1:</span> [to_state_1, to_state_2, ...],</span><br><span class="line"><span class="symbol">        edge_char_2:</span> [to_state_1, to_state_2, ...],</span><br><span class="line"><span class="symbol">        edge_char_3:</span> ...,</span><br><span class="line">    &#125;,</span><br><span class="line"><span class="symbol">    from_state_2:</span> ...</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>在开始之前，我们需要明确一个有穷自动机的描述方式，这里使用一个二维的字典<code>Move</code>来描述<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">Move = &#123;</span><br><span class="line">    from_state_1: &#123;</span><br><span class="line">        edge_char_1: [to_state_1, to_state_2, ...],</span><br><span class="line">        edge_char_2: [to_state_1, to_state_2, ...],</span><br><span class="line">        edge_char_3: ...,</span><br><span class="line">    &#125;,</span><br><span class="line">    from_state_2: ...</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
 <p>首先，对于ε转移，如果从状态s到状态t存在一条全是ε的路径，那么在接收字符的时候需要既可以s出发也可以从t出发。对于一个特定的状态s，我们希望计算出所有可能的t满足上述条件，这样的集合被称为s的ε-闭包，这可以使BFS来解决，这里给出类python的伪代码<br><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">from</span> queue <span class="keyword">import</span> Queue</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> ε-<span class="title">closure</span><span class="params">(s)</span>:</span></span><br><span class="line">    queue = Queue(s)        <span class="comment"># BFS维护的队列</span></span><br><span class="line">    collection = set()      <span class="comment"># 最后返回的ε-闭包集合</span></span><br><span class="line"></span><br><span class="line">    <span class="keyword">while</span> <span class="keyword">not</span> queue.empty():</span><br><span class="line">        start_state = queue.get()</span><br><span class="line">        collection.add(start_state)</span><br><span class="line">        <span class="keyword">for</span> end_state <span class="keyword">in</span> Move[start_state][ε]:</span><br><span class="line">            <span class="keyword">if</span> end_state <span class="keyword">not</span> <span class="keyword">in</span> collection:</span><br><span class="line">                queue.put(end_state)</span><br><span class="line"></span><br><span class="line">    <span class="keyword">return</span> collection</span><br></pre></td></tr></table></figure></p>
 <p>对于NFA的初始状态s，实际上接受的字符串可以从ε-closure(s)集合中的任一状态出发，对于一个确定的集合S = ε-closure(s)，和一个确定的字符char，我们总可以得到一个确定的状态T，状态T即从S中的任意状态，接受字符char可到达的状态的集合，计算T的伪代码如下：</p>
 <figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">Trans</span><span class="params">(S, char)</span>:</span></span><br><span class="line">    T = set()</span><br><span class="line">    <span class="keyword">for</span> s <span class="keyword">in</span> S:</span><br><span class="line">        end_states = Move[s][char]</span><br><span class="line">        <span class="keyword">for</span> end_state <span class="keyword">in</span> end_states:</span><br><span class="line">            end_state_closure = ε-closure(end_state)</span><br><span class="line">            T = T.union(end_state_closure)</span><br><span class="line">    <span class="keyword">return</span> T</span><br></pre></td></tr></table></figure>
@@ -476,7 +476,7 @@
         
           <a href="/archives/">
         
-          <span class="site-state-item-count">5</span>
+          <span class="site-state-item-count">6</span>
           <span class="site-state-item-name">日志</span>
         </a>
       </div>
@@ -538,7 +538,9 @@
         
           
         
-        <span class="site-state-item-count">12</span>
+          
+        
+        <span class="site-state-item-count">13</span>
         <span class="site-state-item-name">标签</span>
         </a>
       </div>
@@ -610,12 +612,12 @@
     <span class="post-meta-item-icon">
       <i class="fa fa-area-chart"></i>
     </span>
-    <span title="站点总字数">16k</span>
+    <span title="站点总字数">18k</span>
     <span class="post-meta-divider">|</span>
     <span class="post-meta-item-icon">
       <i class="fa fa-coffee"></i>
     </span>
-    <span title="站点阅读时长">1:18</span>
+    <span title="站点阅读时长">1:29</span>
 </div>
   <div class="powered-by">由 <a href="https://hexo.io" class="theme-link" rel="noopener" target="_blank">Hexo</a> 强力驱动 v3.9.0</div>
   <span class="post-meta-divider">|</span>
