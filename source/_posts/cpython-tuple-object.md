@@ -11,7 +11,7 @@ tags: [python, 源码, cpython, python-objects]
 ### tuple对象的定义
 tuple对象的定义位于`Include/tupleobject.h`中，这是一种c语言中声明可变长度对象的常用做法，即在结构体末尾声明一个长度为1的数组，在申请内存的时候，多申请的内存都会作为该数组的存储空间。可以看出，tuple中存储的python对象是直接放置在结构体中的，而list由于其是可变的，其只存放了指向python对象的指针。
 
-```
+``` C
 typedef struct {
     PyObject_VAR_HEAD
     PyObject *ob_item[1];
@@ -31,7 +31,7 @@ python为了提高性能，在很多对象中都使用了复用机制，tuple的
 
 另外，空的tuple对象并不需要通过链表管理，全局只存在一个空的tuple对象，即在`free_list[0]`中。
 
-```
+``` C
 /* Speed optimization to avoid frequent malloc/free of small tuples */
 #ifndef PyTuple_MAXSAVESIZE
 #define PyTuple_MAXSAVESIZE     20  /* Largest tuple to save on free list */
@@ -52,3 +52,6 @@ static int numfree[PyTuple_MAXSAVESIZE];
 每次调用new的时候，python会先在free_list中寻找是否有未使用的tuple对象，如果存在，即可直接将该对象取出，将其中存放的PyObject指针替换掉即可。如果不存在，就只能新建一个新的tuple对象了。
 
 而在销毁tuple对象的时候，如果可以的话，就会将其放回到free_list中，而不是直接销毁，这样就节省出了一次dealloc的开销。注意空的tuple对象直接管理其引用计数即可。
+
+
+### tuple对象的比较

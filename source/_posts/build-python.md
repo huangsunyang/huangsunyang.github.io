@@ -1,8 +1,8 @@
 ---
-title: build_python
+title: Build Python
 date: 2019-09-01 22:02:22
 categories: python源码
-tags:[python, 源码, 编译]
+tags: [python, 源码, 编译]
 ---
 
 ## 前言
@@ -13,9 +13,27 @@ tags:[python, 源码, 编译]
 - Windows10 sdk
 
 ## 步骤
-总的来说，编译python源码其实很简单，直接进入PCBuild文件路径调用build.bat即可。但是我这里遇到了一个编译错误，估计大家也都会遇到，[在github上有人给出了解决方案](https://github.com/python-cmake-buildsystem/python-cmake-buildsystem/issues/161)
+总的来说，编译python源码其实很简单，直接进入PCBuild文件路径调用build.bat即可。但是我这里会遇到了几个编译错误，估计大家也都会遇到。
+
+```
+C:\Program Files (x86)\MSBuild\Microsoft.Cpp\v4.0\V140\Microsoft.Cpp.Platform.targets(56,5): error MSB8020:The build tools for Visual Studio 2008 (Platform Toolset = 'v90') cannot be found. To build using the v90 build tools, please install Visual Studio 2008 build tools.  Alternatively, you may upgrade to the current Visual Studio tools by selecting the Project menu or right-click the solution, and then selecting "Retarget solution". [E:\game_development\books\Python-2.7.15\PCbuild\pythoncore.vcxproj]
+```
+
+首先是一个编译工具版本错误，我这里是visual studio 2015版本，重新打开解决方案vs会自动提示升级项目，直接升级即可。
 
 <!--more-->
+
+此外还会遇到以下两个编译错误，[在github上有人给出了解决方案](https://github.com/python-cmake-buildsystem/python-cmake-buildsystem/issues/161)
+
+
+```
+..\Modules\timemodule.c(811): error C2065: 'timezone': undeclared identifier [E:\game_development\books\Python-2.7.15\PCbuild\pythoncore.vcxproj]
+..\Modules\timemodule.c(819): error C2065: 'timezone': undeclared identifier [E:\game_development\books\Python-2.7.15\PCbuild\pythoncore.vcxproj]
+..\Modules\timemodule.c(822): error C2065: 'daylight': undeclared identifier [E:\game_development\books\Python-2.7.15\PCbuild\pythoncore.vcxproj]
+..\Modules\timemodule.c(824): error C2065: 'tzname': undeclared identifier [E:\game_development\books\Python-2.7.15\PCbuild\pythoncore.vcxproj]
+..\Modules\timemodule.c(824): error C2109: subscript requires array or pointer type [E:\game_development\books\Python-2.7.15\PCbuild\pythoncore.v
+```
+
 
 ```
 posixmodule.obj : error LNK2001: 无法解析的外部符号 __imp____pioinfo [E:\CS\Python\Python-2.7.15\PCbuild\pythoncore.vcxproj]
@@ -23,7 +41,7 @@ E:\CS\Python\Python-2.7.15\PCBuild\python27.dll : fatal error LNK1120: 1 个无�
 \pythoncore.vcxproj]
 ```
 将`_PyVerify_fd`中的函数替换了即可正常编译了
-```
+``` C
 /* This function emulates what the windows CRT does to validate file handles */
 int
 _PyVerify_fd(int fd)

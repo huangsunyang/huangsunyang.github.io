@@ -5,7 +5,7 @@
 # Site
 title: Decode
 subtitle: programming blog by huangsunyang
-description: 
+description:
 author: _huang
 language: zh-CN
 timezone: Asia/Shanghai
@@ -40,9 +40,9 @@ future: true
 highlight:
   enable: true
   line_number: true
-  auto_detect: true
+  auto_detect: false
   tab_replace:
-  
+
 # Home page setting
 # path: Root path for your blogs index page. (default = '')
 # per_page: Posts displayed per page. (0 = disable pagination)
@@ -51,7 +51,7 @@ index_generator:
   path: ''
   per_page: 10
   order_by: -date
-  
+
 # Category & Tag
 default_category: uncategorized
 category_map:
@@ -72,11 +72,11 @@ pagination_dir: page
 # Extensions
 ## Plugins: https://hexo.io/plugins/
 ## Themes: https://hexo.io/themes/
-theme: next 
+theme: next
 
 # Deployment
 ## Docs: https://hexo.io/docs/deployment.html
-deploy: 
+deploy:
   type: git
   repo: https://github.com/huangsunyang/huangsunyang.github.io.git
   branch: master
@@ -100,7 +100,7 @@ menu:
   categories: /categories/ || th
  # commonweal: /404/ || heartbeat
 
-# Enable/Disable menu icons.   #菜单图标  
+# Enable/Disable menu icons.   #菜单图标
 menu_icons:
     enable: true
 
@@ -111,7 +111,7 @@ symbols_count_time:
   time: true
   total_symbols: true
   total_time: true
-  exclude_codeblock: false    
+  exclude_codeblock: false
 
 # hexo-graphviz
 graphviz:
