@@ -1,0 +1,728 @@
+<!DOCTYPE html>
+
+
+
+
+
+<html class="theme-next muse use-motion" lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="generator" content="Hexo 3.9.0">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=7.3.0">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=7.3.0">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=7.3.0">
+  <link rel="mask-icon" href="/images/logo.svg?v=7.3.0" color="#222">
+
+<link rel="stylesheet" href="/css/main.css?v=7.3.0">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/font-awesome.min.css?v=4.7.0">
+
+
+<script id="hexo-configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Muse',
+    version: '7.3.0',
+    exturl: false,
+    sidebar: {"position":"left","display":"post","offset":12,"onmobile":false},
+    back2top: {"enable":true,"sidebar":false,"scrollpercent":false},
+    save_scroll: false,
+    copycode: {"enable":false,"show_result":false,"style":null},
+    fancybox: false,
+    mediumzoom: false,
+    lazyload: false,
+    pangu: false,
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    },
+    localsearch: {"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},
+    path: '',
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    translation: {
+      copy_button: '复制',
+      copy_success: '复制成功',
+      copy_failure: '复制失败'
+    }
+  };
+</script>
+
+  <meta name="description" content="前言在python中，一切皆是对象，函数也不例外。函数也是python中的一等对象first-class object之一。所谓一等对象，代表了这类对象能够被动态地创建，销毁，作为函数的参数和返回值，拥有和其他变量一样的特权。在C语言中，函数以指针的方式存在，函数指针指向的是什么呢？我不确定，但我猜想是函数编译成的机器指令的地址，函数的调用也就是指令跳转的过程。python中的函数实际上也是类似的">
+<meta name="keywords" content="python,源码,cpython,python-objects">
+<meta property="og:type" content="article">
+<meta property="og:title" content="CPython Function Call">
+<meta property="og:url" content="http://huangsunyang.com/2019/09/12/cpython-function-call/index.html">
+<meta property="og:site_name" content="Decode">
+<meta property="og:description" content="前言在python中，一切皆是对象，函数也不例外。函数也是python中的一等对象first-class object之一。所谓一等对象，代表了这类对象能够被动态地创建，销毁，作为函数的参数和返回值，拥有和其他变量一样的特权。在C语言中，函数以指针的方式存在，函数指针指向的是什么呢？我不确定，但我猜想是函数编译成的机器指令的地址，函数的调用也就是指令跳转的过程。python中的函数实际上也是类似的">
+<meta property="og:locale" content="zh-CN">
+<meta property="og:updated_time" content="2019-11-04T14:26:18.435Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="CPython Function Call">
+<meta name="twitter:description" content="前言在python中，一切皆是对象，函数也不例外。函数也是python中的一等对象first-class object之一。所谓一等对象，代表了这类对象能够被动态地创建，销毁，作为函数的参数和返回值，拥有和其他变量一样的特权。在C语言中，函数以指针的方式存在，函数指针指向的是什么呢？我不确定，但我猜想是函数编译成的机器指令的地址，函数的调用也就是指令跳转的过程。python中的函数实际上也是类似的">
+  <link rel="canonical" href="http://huangsunyang.com/2019/09/12/cpython-function-call/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome: false,
+    isPost: true,
+    isPage: false,
+    isArchive: false
+  };
+</script>
+
+  <title>CPython Function Call | Decode</title>
+  
+
+
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .motion-element,
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-title { opacity: initial; }
+
+  .use-motion .logo,
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-CN">
+
+  <div class="container sidebar-position-left">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta">
+
+    <div class="custom-logo-site-title">
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">Decode</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+        <p class="site-subtitle">programming blog by huangsunyang</p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button aria-label="切换导航栏">
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+
+<nav class="site-nav">
+  
+  <ul id="menu" class="menu">
+      
+      
+      
+        
+        <li class="menu-item menu-item-home">
+      
+    
+
+    <a href="/" rel="section"><i class="menu-item-icon fa fa-fw fa-home"></i> <br>首页</a>
+
+  </li>
+      
+      
+      
+        
+        <li class="menu-item menu-item-about">
+      
+    
+
+    <a href="/about/" rel="section"><i class="menu-item-icon fa fa-fw fa-user"></i> <br>关于</a>
+
+  </li>
+      
+      
+      
+        
+        <li class="menu-item menu-item-tags">
+      
+    
+
+    <a href="/tags/" rel="section"><i class="menu-item-icon fa fa-fw fa-tags"></i> <br>标签</a>
+
+  </li>
+      
+      
+      
+        
+        <li class="menu-item menu-item-categories">
+      
+    
+
+    <a href="/categories/" rel="section"><i class="menu-item-icon fa fa-fw fa-th"></i> <br>分类</a>
+
+  </li>
+      
+      
+      
+        
+        <li class="menu-item menu-item-archives">
+      
+    
+
+    <a href="/archives/" rel="section"><i class="menu-item-icon fa fa-fw fa-archive"></i> <br>归档</a>
+
+  </li>
+  </ul>
+
+    
+
+</nav>
+</div>
+    </header>
+
+    
+
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content page-post-detail">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://huangsunyang.com/2019/09/12/cpython-function-call/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="_huang">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/portrait.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Decode">
+    </span>
+      <header class="post-header">
+
+        
+          <h1 class="post-title" itemprop="name headline">CPython Function Call
+
+            
+          </h1>
+        
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              
+                
+              
+
+              <time title="创建时间：2019-09-12 20:45:41" itemprop="dateCreated datePublished" datetime="2019-09-12T20:45:41+08:00">2019-09-12</time>
+            </span>
+          
+            
+
+            
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-calendar-check-o"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2019-11-04 22:26:18" itemprop="dateModified" datetime="2019-11-04T22:26:18+08:00">2019-11-04</time>
+              </span>
+            
+          
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing"><a href="/categories/python源码/" itemprop="url" rel="index"><span itemprop="name">python源码</span></a></span>
+
+                
+                
+              
+            </span>
+          
+
+          
+          <br>
+            <span class="post-meta-item" title="本文字数">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-file-word-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">本文字数：</span>
+              
+              <span>4.1k</span>
+            </span>
+          
+            <span class="post-meta-item" title="阅读时长">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-clock-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">阅读时长 &asymp;</span>
+              
+              <span>21 分钟</span>
+            </span>
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>在python中，一切皆是对象，函数也不例外。函数也是python中的一等对象<a href="https://stackoverflow.com/questions/245192/what-are-first-class-objects" target="_blank" rel="noopener"><code>first-class object</code></a>之一。所谓一等对象，代表了这类对象能够被动态地创建，销毁，作为函数的参数和返回值，拥有和其他变量一样的特权。在C语言中，函数以指针的方式存在，函数指针指向的是什么呢？我不确定，但我猜想是函数编译成的机器指令的地址，函数的调用也就是指令跳转的过程。python中的函数实际上也是类似的思想，不止函数如此，整个python虚拟机也都非常类似操作系统执行c代码的过程。</p>
+<h2 id="函数作为对象"><a href="#函数作为对象" class="headerlink" title="函数作为对象"></a>函数作为对象</h2><p>函数虽然更像是一种<strong>动作</strong>，但是动作也能够以<strong>数据</strong>的方式存在，这样的数据也就是指令。python中的函数，也就是类型为<code>function</code>的对象，在CPython中对应的结构体为<code>PyFunctionObject</code>。函数对象的定义在<code>funcobject.h</code>中，摘抄定义如下：</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">typedef</span> <span class="class"><span class="keyword">struct</span> &#123;</span></span><br><span class="line">    PyObject_HEAD</span><br><span class="line">    PyObject *func_code;		<span class="comment">/* A code object */</span></span><br><span class="line">    PyObject *func_globals;		<span class="comment">/* A dictionary (other mappings won't do) */</span></span><br><span class="line">    PyObject *func_defaults;	<span class="comment">/* NULL or a tuple */</span></span><br><span class="line">    PyObject *func_closure;		<span class="comment">/* NULL or a tuple of cell objects */</span></span><br><span class="line">    PyObject *func_doc;			<span class="comment">/* The __doc__ attribute, can be anything */</span></span><br><span class="line">    PyObject *func_name;		<span class="comment">/* The __name__ attribute, a string object */</span></span><br><span class="line">    PyObject *func_dict;		<span class="comment">/* The __dict__ attribute, a dict or NULL */</span></span><br><span class="line">    PyObject *func_weakreflist;	<span class="comment">/* List of weak references */</span></span><br><span class="line">    PyObject *func_module;		<span class="comment">/* The __module__ attribute, can be anything */</span></span><br><span class="line"></span><br><span class="line">    <span class="comment">/* Invariant:</span></span><br><span class="line"><span class="comment">     *     func_closure contains the bindings for func_code-&gt;co_freevars, so</span></span><br><span class="line"><span class="comment">     *     PyTuple_Size(func_closure) == PyCode_GetNumFree(func_code)</span></span><br><span class="line"><span class="comment">     *     (func_closure may be NULL if PyCode_GetNumFree(func_code) == 0).</span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line">&#125; PyFunctionObject;</span><br></pre></td></tr></table></figure>
+<a id="more"></a>
+<p>其中，最重要的也就是<code>func_code</code>域，这也就相当于c语言的函数编译后所对应的机器指令。其余的参数一部分为对象提供标识和信息，如<code>func_doc</code>，<code>func_name</code>等，另一部分则是为<code>func_code</code>的执行提供环境，如<code>func_globals</code>，<code>func_defaults</code>，<code>func_closure</code>。本文暂时不会涉及对<code>PyCodeObject</code>的介绍，其实其也就是python代码编译后所产生的字节码所对应的对象。</p>
+<h2 id="静态还是动态"><a href="#静态还是动态" class="headerlink" title="静态还是动态"></a>静态还是动态</h2><p>怎么理解python中的动态和静态？python作为一门动态语言，它实际上也存在着编译/运行的过程，编译期能够决定的是在我看来也就是静态的。</p>
+<p>函数是静态的还是动态的呢？首先，python中的函数绝对是动态的，python中的函数可以动态的创建和修改，只要有了<code>PyCodeObject</code>和执行的环境，就能创建一个<code>PyFunctionObject</code>，在运行时，我们也可以修改<code>func_defaults</code>等变量来改变函数的行为。</p>
+<p>那么<code>Code</code>对象是静态还是动态的呢？个人认为，<code>code</code>对象更像是静态的，虽然code对象能够被动态地创建，但是其在创建之后是不能够再被修改的。通常，python中的函数，无论是函数，方法，还是lambda表达式，其中所包含的所要执行的代码块，在编译期就已经确定了。<code>code</code>对象中，已经知道了所有要执行的字节码，所有常量，局部变量名，全局变量名和闭包名。但是这些变量名对应的值，将在函数的运行期才能够获得。</p>
+<h2 id="函数的创建"><a href="#函数的创建" class="headerlink" title="函数的创建"></a>函数的创建</h2><p>先看一段函数创建的简单字节码</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&gt;&gt;&gt; </span><span class="function"><span class="keyword">def</span> <span class="title">a</span><span class="params">(a, b=<span class="number">1</span>, *args, **kwargs)</span>:</span></span><br><span class="line"><span class="meta">... </span>    <span class="keyword">pass</span></span><br><span class="line"></span><br><span class="line"><span class="meta">&gt;&gt;&gt; </span>dis.dis(f)</span><br><span class="line">  <span class="number">2</span>           <span class="number">0</span> LOAD_CONST               <span class="number">1</span> (<span class="number">1</span>)</span><br><span class="line">              <span class="number">3</span> LOAD_CONST               <span class="number">2</span> (&lt;code object a at <span class="number">02</span>B85AD0, file <span class="string">"&lt;stdin&gt;"</span>, line <span class="number">2</span>&gt;)</span><br><span class="line">              <span class="number">6</span> MAKE_FUNCTION            <span class="number">1</span></span><br><span class="line">              <span class="number">9</span> STORE_FAST               <span class="number">0</span> (a)</span><br><span class="line">             <span class="number">12</span> LOAD_CONST               <span class="number">0</span> (<span class="literal">None</span>)</span><br><span class="line">             <span class="number">15</span> RETURN_VALUE</span><br></pre></td></tr></table></figure>
+<p>很明显，创建函数调用了<code>MAKE_FUNCTION</code>这个指令，从<code>ceval.c</code>中截取相关代码如下：</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line">TARGET(MAKE_FUNCTION)</span><br><span class="line">&#123;</span><br><span class="line">    v = POP(); <span class="comment">/* code object */</span></span><br><span class="line">    x = PyFunction_New(v, f-&gt;f_globals);</span><br><span class="line">    Py_DECREF(v);</span><br><span class="line">    <span class="comment">/* XXX Maybe this should be a separate opcode? */</span></span><br><span class="line">    <span class="keyword">if</span> (x != <span class="literal">NULL</span> &amp;&amp; oparg &gt; <span class="number">0</span>) &#123;</span><br><span class="line">        v = PyTuple_New(oparg);</span><br><span class="line">        <span class="keyword">if</span> (v == <span class="literal">NULL</span>) &#123;</span><br><span class="line">            Py_DECREF(x);</span><br><span class="line">            x = <span class="literal">NULL</span>;</span><br><span class="line">            <span class="keyword">break</span>;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">while</span> (--oparg &gt;= <span class="number">0</span>) &#123;</span><br><span class="line">            w = POP();</span><br><span class="line">            PyTuple_SET_ITEM(v, oparg, w);</span><br><span class="line">        &#125;</span><br><span class="line">        err = PyFunction_SetDefaults(x, v);</span><br><span class="line">        Py_DECREF(v);</span><br><span class="line">    &#125;</span><br><span class="line">    PUSH(x);</span><br><span class="line">    <span class="keyword">break</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>函数的创建也就是用<code>code</code>对象和当前帧的<code>globals</code>为参数，随后设置了函数的默认参数。<code>PyFunction_New</code>和<code>PyFunction_SetDefaults</code>的实现都非常简单，基本都是在做默认的参数检查和初始化，这里也就不在赘述。</p>
+<h2 id="定义参数与传递参数"><a href="#定义参数与传递参数" class="headerlink" title="定义参数与传递参数"></a>定义参数与传递参数</h2><p>在介绍python函数的调用之前，我们必须明确函数的参数定义格式以及传递的格式，因为函数调用中很多精力也就是在处理函数的参数。python中的函数定义和传递格式非常自由，导致我很长一段时间都没有真正理解参数的含义，比如，定义和传递中的a=3实际上其实毫无关联，我却很容易将其联系为呼应的关系。</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">func</span><span class="params">(a, b=<span class="number">3</span>, *args, **kwargs)</span>:</span></span><br><span class="line">	<span class="keyword">pass</span></span><br></pre></td></tr></table></figure>
+<p>python中函数的定义一共包括以下若干种类型：</p>
+<ul>
+<li>位置参数：a</li>
+<li>带默认值的位置参数：b</li>
+<li>扩展参数：c</li>
+<li>扩展键值参数：d</li>
+</ul>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">func(<span class="number">1</span>, <span class="number">2</span>, <span class="number">3</span>, c=<span class="number">4</span>)</span><br></pre></td></tr></table></figure>
+<p>python中函数参数的传递就只有以下两种类型：</p>
+<ul>
+<li>位置参数：1，2，3</li>
+<li>键值参数：c=4</li>
+</ul>
+<p>python是如何将传递的参数填入定义中的呢？其中包含以下多个pass：</p>
+<ul>
+<li>首先检查位置参数，传递的位置参数能够匹配定义中的位置参数<ul>
+<li>传递的位置参数数量少于定义中的无默认值位置参数时，报错；否则按位置填入</li>
+<li>传递的位置参数多于定义中的位置参数+带默认参数的位置参数时，多余的参数则会进入扩展参数</li>
+</ul>
+</li>
+<li>其次检查键值参数<ul>
+<li>对每个键值参数，匹配定义中的位置参数，如果发现已经匹配，则报错；否则可填入</li>
+<li>如果没有可匹配的位置参数，则进入扩展键值参数</li>
+</ul>
+</li>
+<li>最后检查默认参数<ul>
+<li>第一步保证了所有没有默认值的位置参数已经被填入</li>
+<li>现在可对所有带默认值的位置参数进行检查，如果未赋值，则填入默认值</li>
+</ul>
+</li>
+</ul>
+<p>以上逻辑的代码实现位于<code>ceval.c</code>中的<code>PyEval_EvalCodeEx</code>函数内</p>
+<h2 id="函数的调用"><a href="#函数的调用" class="headerlink" title="函数的调用"></a>函数的调用</h2><p>函数调用的字节码是<code>CALL_FUNCTION</code>，也就是调用了<code>ceval.c</code>中的<code>call_function</code>函数，函数直接将栈指针的地址传入作为参数，另一个参数的低8位是位置参数个数，高8位则是键值参数个数。为什么要传栈指针的地址呢？因为C语言没有引用，函数内部要改变栈指针，就必须要传地址过去。</p>
+<p><code>call_function</code>做了什么呢？由于python中的可调用对象非常多，fast_function中对不同的可调用对象做了区分，首先区分了是否是<code>PyCFunctionObject</code>，然后判断了是否是方法。最终，普通的函数则走入了<code>fast_function</code>函数。</p>
+<p><code>fast_function</code>又做了什么呢？简单来说就是做了一个快速判断，如果函数无参，直接创建栈帧执行<code>codeobject</code>中的代码，如果函数带参数，则需要执行之前介绍的<code>PyEval_EvalCodeEx</code>处理参数。当然最终，这两者都会创建栈帧，执行<code>func_code</code>中存放的字节码。</p>
+
+    </div>
+
+    
+    
+    
+        
+      
+
+      <footer class="post-footer">
+          
+            
+          
+          <div class="post-tags">
+            
+              <a href="/tags/python/" rel="tag"># python</a>
+            
+              <a href="/tags/源码/" rel="tag"># 源码</a>
+            
+              <a href="/tags/cpython/" rel="tag"># cpython</a>
+            
+              <a href="/tags/python-objects/" rel="tag"># python-objects</a>
+            
+          </div>
+        
+
+        
+
+          <div class="post-nav">
+            <div class="post-nav-next post-nav-item">
+              
+                <a href="/2019/09/01/build-python/" rel="next" title="Build Python">
+                  <i class="fa fa-chevron-left"></i> Build Python
+                </a>
+              
+            </div>
+
+            <span class="post-nav-divider"></span>
+
+            <div class="post-nav-prev post-nav-item">
+              
+            </div>
+          </div>
+        
+      </footer>
+    
+  </div>
+  
+  
+  
+  </article>
+
+  </div>
+
+
+          </div>
+          
+
+        </div>
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image"
+      src="/images/portrait.jpg"
+      alt="_huang">
+  <p class="site-author-name" itemprop="name">_huang</p>
+  <div class="site-description motion-element" itemprop="description"></div>
+</div>
+  <nav class="site-state motion-element">
+      <div class="site-state-item site-state-posts">
+        
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">7</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+    
+      
+      
+      <div class="site-state-item site-state-categories">
+        
+          
+            <a href="/categories/">
+          
+        
+        
+        
+          
+        
+          
+        
+          
+        
+          
+        
+        <span class="site-state-item-count">4</span>
+        <span class="site-state-item-name">分类</span>
+        </a>
+      </div>
+    
+      
+      
+      <div class="site-state-item site-state-tags">
+        
+          
+            <a href="/tags/">
+          
+        
+        
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+        <span class="site-state-item-count">13</span>
+        <span class="site-state-item-name">标签</span>
+        </a>
+      </div>
+    
+  </nav>
+  <div class="links-of-author motion-element">
+      <span class="links-of-author-item">
+      
+      
+        
+      
+      
+        
+      
+        <a href="https://github.com/huangsunyang" title="GitHub &rarr; https://github.com/huangsunyang" rel="noopener" target="_blank"><i class="fa fa-fw fa-github"></i>GitHub</a>
+      </span>
+    
+      <span class="links-of-author-item">
+      
+      
+        
+      
+      
+        
+      
+        <a href="mailto:huangsunyang@126.com" title="E-Mail &rarr; mailto:huangsunyang@126.com" rel="noopener" target="_blank"><i class="fa fa-fw fa-envelope"></i>E-Mail</a>
+      </span>
+    
+  </div>
+
+
+
+        </div>
+      </div>
+      <!--noindex-->
+        <div class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+            
+            
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#前言"><span class="nav-number">1.</span> <span class="nav-text">前言</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#函数作为对象"><span class="nav-number">2.</span> <span class="nav-text">函数作为对象</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#静态还是动态"><span class="nav-number">3.</span> <span class="nav-text">静态还是动态</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#函数的创建"><span class="nav-number">4.</span> <span class="nav-text">函数的创建</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#定义参数与传递参数"><span class="nav-number">5.</span> <span class="nav-text">定义参数与传递参数</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#函数的调用"><span class="nav-number">6.</span> <span class="nav-text">函数的调用</span></a></li></ol></div>
+            
+
+          </div>
+        </div>
+      <!--/noindex-->
+      
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; <span itemprop="copyrightYear">2019</span>
+  <span class="with-love" id="animate">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">_huang</span>
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item-icon">
+      <i class="fa fa-area-chart"></i>
+    </span>
+    <span title="站点总字数">23k</span>
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item-icon">
+      <i class="fa fa-coffee"></i>
+    </span>
+    <span title="站点阅读时长">1:57</span>
+</div>
+  <div class="powered-by">由 <a href="https://hexo.io" class="theme-link" rel="noopener" target="_blank">Hexo</a> 强力驱动 v3.9.0</div>
+  <span class="post-meta-divider">|</span>
+  <div class="theme-info">主题 – <a href="https://theme-next.org" class="theme-link" rel="noopener" target="_blank">NexT.Muse</a> v7.3.0</div>
+
+
+  <script src='https://cdnjs.cloudflare.com/ajax/libs/viz.js/1.7.1/viz.js'></script>
+  <script>
+    String.prototype.chineseChar2englishChar = function chineseChar2englishChar(){
+    // 将单引号‘’都转换成'，将双引号“”都转换成"
+    var str = this.replace(/\’|\‘/g,"'").replace(/\“|\”/g,"\"");
+    // 将中括号【】转换成[]，将大括号｛｝转换成{}
+    str = str.replace(/\【/g,"[").replace(/\】/g,"]").replace(/\｛/g,"{").replace(/\｝/g,"}");
+    // 将逗号，转换成,，将：转换成:
+    str = str.replace(/，/g,",").replace(/：/g,":");
+    return str;
+}
+
+    let vizObjects = document.querySelectorAll('.graphviz')
+
+    for (let item of vizObjects) {
+      item.parentNode.style.textAlign = "center"
+      let svg = undefined
+      try {
+        svg = Viz(item.textContent.chineseChar2englishChar(), 'svg')
+      } catch(e) {
+        svg = `<pre class="error">${item.textContent}</pre>`
+      }
+      item.outerHTML = svg
+    }
+  </script>
+
+
+        
+
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+      </div>
+
+    
+
+  </div>
+
+  
+  <script src="/lib/jquery/index.js?v=3.4.1"></script>
+  <script src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  <script src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+<script src="/js/utils.js?v=7.3.0"></script>
+  <script src="/js/motion.js?v=7.3.0"></script>
+
+
+  <script src="/js/schemes/muse.js?v=7.3.0"></script>
+
+
+<script src="/js/next-boot.js?v=7.3.0"></script>
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+
+
+  
+  <script src="/js/scrollspy.js?v=7.3.0"></script>
+<script src="/js/post-details.js?v=7.3.0"></script>
+
+
+</body>
+</html>
