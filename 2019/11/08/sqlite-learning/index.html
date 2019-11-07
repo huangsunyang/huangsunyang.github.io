@@ -55,14 +55,19 @@
   };
 </script>
 
-  <meta property="og:type" content="website">
-<meta property="og:title" content="Decode">
-<meta property="og:url" content="http://huangsunyang.com/tags/ACM/index.html">
+  <meta name="description" content="WHY SQLite为什么要学SQLite？起因来源于云风的《Lua源码赏析》这本小册子，里面提到了reddit上的一个问题，问的是最值得阅读的well-designed的开源项目，其中SQLite广受好评，此外就是Lua的虚拟机（等我python再学习深入后也可以对照着看看Lua，毕竟Lua相对简单，其实更容易上手）。此外，作为一个非科班出生的客户端程序，对于服务端的一些知识了解其实是相对缺乏的">
+<meta name="keywords" content="源码,sqlite,c">
+<meta property="og:type" content="article">
+<meta property="og:title" content="SQLite Learning Resource">
+<meta property="og:url" content="http://huangsunyang.com/2019/11/08/sqlite-learning/index.html">
 <meta property="og:site_name" content="Decode">
+<meta property="og:description" content="WHY SQLite为什么要学SQLite？起因来源于云风的《Lua源码赏析》这本小册子，里面提到了reddit上的一个问题，问的是最值得阅读的well-designed的开源项目，其中SQLite广受好评，此外就是Lua的虚拟机（等我python再学习深入后也可以对照着看看Lua，毕竟Lua相对简单，其实更容易上手）。此外，作为一个非科班出生的客户端程序，对于服务端的一些知识了解其实是相对缺乏的">
 <meta property="og:locale" content="zh-CN">
+<meta property="og:updated_time" content="2019-11-07T16:47:19.956Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="Decode">
-  <link rel="canonical" href="http://huangsunyang.com/tags/ACM/">
+<meta name="twitter:title" content="SQLite Learning Resource">
+<meta name="twitter:description" content="WHY SQLite为什么要学SQLite？起因来源于云风的《Lua源码赏析》这本小册子，里面提到了reddit上的一个问题，问的是最值得阅读的well-designed的开源项目，其中SQLite广受好评，此外就是Lua的虚拟机（等我python再学习深入后也可以对照着看看Lua，毕竟Lua相对简单，其实更容易上手）。此外，作为一个非科班出生的客户端程序，对于服务端的一些知识了解其实是相对缺乏的">
+  <link rel="canonical" href="http://huangsunyang.com/2019/11/08/sqlite-learning/">
 
 
 <script id="page-configurations">
@@ -70,13 +75,13 @@
   CONFIG.page = {
     sidebar: "",
     isHome: false,
-    isPost: false,
+    isPost: true,
     isPage: false,
     isArchive: false
   };
 </script>
 
-  <title>标签: ACM | Decode</title>
+  <title>SQLite Learning Resource | Decode</title>
   
 
 
@@ -205,27 +210,6 @@
 
     
 
-    
-    
-      
-      
-    
-      
-      
-    
-      
-      
-    
-      
-      
-    
-      
-      
-    
-    
-
-  
-
 </nav>
 </div>
     </header>
@@ -236,69 +220,168 @@
     <main id="main" class="main">
       <div class="main-inner">
         <div class="content-wrap">
-          <div id="content" class="content ">
+          <div id="content" class="content page-post-detail">
             
 
-  
-  
-  
-  <div class="post-block tag">
-
-    <div id="posts" class="posts-collapse">
-      <div class="collection-title">
-        <h1>ACM<small>标签</small>
-        </h1>
-      </div>
-
-      
-
-  
-  
-  
-
-  
+  <div id="posts" class="posts-expand">
     
-    <div class="collection-title">
-      <h1 class="archive-year" id="archive-year-2019">2019</h1>
-    </div>
-  
-  
 
   <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-    <header class="post-header">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://huangsunyang.com/2019/11/08/sqlite-learning/">
 
-      <h2 class="post-title">
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="_huang">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/portrait.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Decode">
+    </span>
+      <header class="post-header">
+
         
-          <a class="post-title-link" href="/2019/08/15/hdu-1006-tick-and-tick/" itemprop="url">
+          <h1 class="post-title" itemprop="name headline">SQLite Learning Resource
+
             
-              <span itemprop="name">Tick and Tick</span>
-            
-          </a>
+          </h1>
         
-      </h2>
 
-      <div class="post-meta">
-        <time class="post-time" itemprop="dateCreated"
-              datetime="2019-08-15T00:03:46+08:00"
-              content="2019-08-15">
-          08-15
-        </time>
-      </div>
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
 
-    </header>
-  </article>
+              
+                
+              
 
+              <time title="创建时间：2019-11-08 00:07:47 / 修改时间：00:47:19" itemprop="dateCreated datePublished" datetime="2019-11-08T00:07:47+08:00">2019-11-08</time>
+            </span>
+          
+            
 
+            
+          
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing"><a href="/categories/sqlite源码/" itemprop="url" rel="index"><span itemprop="name">sqlite源码</span></a></span>
+
+                
+                
+              
+            </span>
+          
+
+          
+          <br>
+            <span class="post-meta-item" title="本文字数">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-file-word-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">本文字数：</span>
+              
+              <span>595</span>
+            </span>
+          
+            <span class="post-meta-item" title="阅读时长">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-clock-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">阅读时长 &asymp;</span>
+              
+              <span>3 分钟</span>
+            </span>
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <h2 id="WHY-SQLite"><a href="#WHY-SQLite" class="headerlink" title="WHY SQLite"></a>WHY SQLite</h2><p>为什么要学<code>SQLite</code>？起因来源于云风的《Lua源码赏析》这本小册子，里面提到了<a href="https://www.reddit.com/r/programming/comments/63hth/ask_reddit_which_oss_codebases_out_there_are_so/" target="_blank" rel="noopener">reddit上的一个问题</a>，问的是最值得阅读的well-designed的开源项目，其中<code>SQLite</code>广受好评，此外就是<code>Lua</code>的虚拟机（等我<code>python</code>再学习深入后也可以对照着看看<code>Lua</code>，毕竟<code>Lua</code>相对简单，其实更容易上手）。此外，作为一个非科班出生的客户端程序，对于服务端的一些知识了解其实是相对缺乏的，数据库一直是我的知识盲区之一，也希望乘此机会了解数据库的相关知识。</p>
+<a id="more"></a>
+<h2 id="如何学习SQLite"><a href="#如何学习SQLite" class="headerlink" title="如何学习SQLite"></a>如何学习SQLite</h2><p>在写这篇文章的时候，我还开始学习，只是做了这个决定，因此现在的我是从零开始。我所设想的学习过程主要分为三个阶段</p>
+<h3 id="学习使用SQLite"><a href="#学习使用SQLite" class="headerlink" title="学习使用SQLite"></a>学习使用SQLite</h3><p>首先自然要学会<code>SQLite</code>数据库的使用，也可以顺便看看<code>python</code>提供的操作<code>SQLite</code>的api，这个时间不需要太长，大概一两天的时间，熟悉一下基本的概念即可。我目前搜集到的资料包括：</p>
+<ul>
+<li><a href="https://www.runoob.com/sqlite/sqlite-python.html" target="_blank" rel="noopener">runoob网页资料</a></li>
+<li><a href="https://www.sqlite.org/index.html" target="_blank" rel="noopener">SQLite官方文档SQL语法介绍</a></li>
+<li><a href="https://www.tutorialspoint.com/sqlite/index.htm" target="_blank" rel="noopener">tutorialspoint网站教程</a></li>
+<li>O’REILLY出版社的Using SQLite，大概看了一些感觉这本最好</li>
+</ul>
+<h3 id="了解SQLite架构"><a href="#了解SQLite架构" class="headerlink" title="了解SQLite架构"></a>了解SQLite架构</h3><p>主要参考了<a href="https://www.zhihu.com/question/22819578" target="_blank" rel="noopener">知乎上广大网友走过的老路</a>，包含了一部分官方文档和书籍，以及一些博客：</p>
+<ul>
+<li><a href="https://www.sqlite.org/arch.html" target="_blank" rel="noopener">官方文档中的架构介绍</a></li>
+<li><a href="https://b-ok.cc/book/488419/0c3177" target="_blank" rel="noopener">Inside SQLite</a>这本书</li>
+</ul>
+<h3 id="源代码学习"><a href="#源代码学习" class="headerlink" title="源代码学习"></a>源代码学习</h3><p>这一部分内容暂时没有能力规划..</p>
 
     </div>
 
+    
+    
+    
+        
+      
+
+      <footer class="post-footer">
+          
+            
+          
+          <div class="post-tags">
+            
+              <a href="/tags/源码/" rel="tag"># 源码</a>
+            
+              <a href="/tags/sqlite/" rel="tag"># sqlite</a>
+            
+              <a href="/tags/c/" rel="tag"># c</a>
+            
+          </div>
+        
+
+        
+
+          <div class="post-nav">
+            <div class="post-nav-next post-nav-item">
+              
+                <a href="/2019/11/05/cpython-closure/" rel="next" title="CPython Closure">
+                  <i class="fa fa-chevron-left"></i> CPython Closure
+                </a>
+              
+            </div>
+
+            <span class="post-nav-divider"></span>
+
+            <div class="post-nav-prev post-nav-item">
+              
+            </div>
+          </div>
+        
+      </footer>
+    
   </div>
   
   
   
+  </article>
 
-  
-
+  </div>
 
 
           </div>
@@ -317,8 +400,17 @@
 
   <aside id="sidebar" class="sidebar">
     <div class="sidebar-inner">
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
 
-      <div class="site-overview-wrap sidebar-panel sidebar-panel-active">
+      <div class="site-overview-wrap sidebar-panel">
         <div class="site-overview">
 
           <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -440,6 +532,23 @@
 
         </div>
       </div>
+      <!--noindex-->
+        <div class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+            
+            
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#WHY-SQLite"><span class="nav-number">1.</span> <span class="nav-text">WHY SQLite</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#如何学习SQLite"><span class="nav-number">2.</span> <span class="nav-text">如何学习SQLite</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#学习使用SQLite"><span class="nav-number">2.1.</span> <span class="nav-text">学习使用SQLite</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#了解SQLite架构"><span class="nav-number">2.2.</span> <span class="nav-text">了解SQLite架构</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#源代码学习"><span class="nav-number">2.3.</span> <span class="nav-text">源代码学习</span></a></li></ol></li></ol></div>
+            
+
+          </div>
+        </div>
+      <!--/noindex-->
+      
 
     </div>
   </aside>
@@ -582,5 +691,9 @@
 
 
   
+  <script src="/js/scrollspy.js?v=7.3.0"></script>
+<script src="/js/post-details.js?v=7.3.0"></script>
+
+
 </body>
 </html>

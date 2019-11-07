@@ -63,7 +63,7 @@
 <meta property="og:site_name" content="Decode">
 <meta property="og:description" content="什么是闭包闭包closure指的是引用了上层函数作用域的变量。当编程语言支持函数能够作为返回值，则闭包的实现则不可或缺，在函数内定义的子函数引用了父函数的变量，就是使用了语言的闭包特性。python中，一个通常会令人困惑的例子如下： 123456789101112131415def generate_funcs():    ret = []    for i in range(10):">
 <meta property="og:locale" content="zh-CN">
-<meta property="og:updated_time" content="2019-11-07T14:52:46.473Z">
+<meta property="og:updated_time" content="2019-11-07T14:54:45.515Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="CPython Closure">
 <meta name="twitter:description" content="什么是闭包闭包closure指的是引用了上层函数作用域的变量。当编程语言支持函数能够作为返回值，则闭包的实现则不可或缺，在函数内定义的子函数引用了父函数的变量，就是使用了语言的闭包特性。python中，一个通常会令人困惑的例子如下： 123456789101112131415def generate_funcs():    ret = []    for i in range(10):">
@@ -273,7 +273,7 @@
                   <i class="fa fa-calendar-check-o"></i>
                 </span>
                 <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2019-11-07 22:52:46" itemprop="dateModified" datetime="2019-11-07T22:52:46+08:00">2019-11-07</time>
+                <time title="修改时间：2019-11-07 22:54:45" itemprop="dateModified" datetime="2019-11-07T22:54:45+08:00">2019-11-07</time>
               </span>
             
           
@@ -348,7 +348,7 @@
 
 
 <h2 id="PyCellObject"><a href="#PyCellObject" class="headerlink" title="PyCellObject"></a>PyCellObject</h2><p>需要注意的是，<code>cellvars</code>和<code>freevars</code>中存放的变量并不是简单的<code>PyObject *</code>，而是通过<code>PyCellObject</code>进行了简单的封装，对其的加载和赋值也都有单独的指令，这样做的原因是为了实现<strong>对变量引用</strong>的闭包。如上面的图例所展现的那样，在创建函数的时候就会将当前栈帧的<code>cellvars</code>拷贝到<code>func_closure</code>中，如果创建函数后重新对闭包引用的变量赋值，不使用<code>PyCellObject</code>就无法捕获到这一变化。</p>
-<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">typedef</span> <span class="class"><span class="keyword">struct</span> &#123;</span></span><br><span class="line">	PyObject_HEAD</span><br><span class="line">	PyObject *ob_ref;	<span class="comment">/* Content of the cell or NULL when empty */</span></span><br><span class="line">&#125; PyCellObject;</span><br><span class="line"></span><br><span class="line">TARGET(LOAD_DEREF)</span><br><span class="line">&#123;</span><br><span class="line">    x = freevars[oparg];</span><br><span class="line">    w = PyCell_Get(x);</span><br><span class="line">    <span class="keyword">if</span> (w != <span class="literal">NULL</span>) &#123;</span><br><span class="line">        PUSH(w);</span><br><span class="line">        DISPATCH();</span><br><span class="line">    &#125;</span><br><span class="line">    err = <span class="number">-1</span>;</span><br><span class="line">    <span class="comment">/* Don't stomp existing exception */</span></span><br><span class="line">    <span class="keyword">if</span> (PyErr_Occurred())</span><br><span class="line">        <span class="keyword">break</span>;</span><br><span class="line">    <span class="keyword">if</span> (oparg &lt; PyTuple_GET_SIZE(co-&gt;co_cellvars)) &#123;</span><br><span class="line">        v = PyTuple_GET_ITEM(co-&gt;co_cellvars,</span><br><span class="line">                             oparg);</span><br><span class="line">        format_exc_check_arg(</span><br><span class="line">            PyExc_UnboundLocalError,</span><br><span class="line">            UNBOUNDLOCAL_ERROR_MSG,</span><br><span class="line">            v);</span><br><span class="line">    &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">        v = PyTuple_GET_ITEM(co-&gt;co_freevars, oparg -</span><br><span class="line">                             PyTuple_GET_SIZE(co-&gt;co_cellvars));</span><br><span class="line">        format_exc_check_arg(PyExc_NameError,</span><br><span class="line">                             UNBOUNDFREE_ERROR_MSG, v);</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">break</span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">TARGET(STORE_DEREF)</span><br><span class="line">&#123;</span><br><span class="line">    w = POP();</span><br><span class="line">    x = freevars[oparg];</span><br><span class="line">    PyCell_Set(x, w);</span><br><span class="line">    Py_DECREF(w);</span><br><span class="line">    DISPATCH();</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">typedef</span> <span class="class"><span class="keyword">struct</span> &#123;</span></span><br><span class="line">    PyObject_HEAD</span><br><span class="line">    PyObject *ob_ref;	<span class="comment">/* Content of the cell or NULL when empty */</span></span><br><span class="line">&#125; PyCellObject;</span><br><span class="line"></span><br><span class="line">TARGET(LOAD_DEREF)</span><br><span class="line">&#123;</span><br><span class="line">    x = freevars[oparg];</span><br><span class="line">    w = PyCell_Get(x);</span><br><span class="line">    <span class="keyword">if</span> (w != <span class="literal">NULL</span>) &#123;</span><br><span class="line">        PUSH(w);</span><br><span class="line">        DISPATCH();</span><br><span class="line">    &#125;</span><br><span class="line">    err = <span class="number">-1</span>;</span><br><span class="line">    <span class="comment">/* Don't stomp existing exception */</span></span><br><span class="line">    <span class="keyword">if</span> (PyErr_Occurred())</span><br><span class="line">        <span class="keyword">break</span>;</span><br><span class="line">    <span class="keyword">if</span> (oparg &lt; PyTuple_GET_SIZE(co-&gt;co_cellvars)) &#123;</span><br><span class="line">        v = PyTuple_GET_ITEM(co-&gt;co_cellvars,</span><br><span class="line">                             oparg);</span><br><span class="line">        format_exc_check_arg(</span><br><span class="line">            PyExc_UnboundLocalError,</span><br><span class="line">            UNBOUNDLOCAL_ERROR_MSG,</span><br><span class="line">            v);</span><br><span class="line">    &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">        v = PyTuple_GET_ITEM(co-&gt;co_freevars, oparg -</span><br><span class="line">                             PyTuple_GET_SIZE(co-&gt;co_cellvars));</span><br><span class="line">        format_exc_check_arg(PyExc_NameError,</span><br><span class="line">                             UNBOUNDFREE_ERROR_MSG, v);</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">break</span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">TARGET(STORE_DEREF)</span><br><span class="line">&#123;</span><br><span class="line">    w = POP();</span><br><span class="line">    x = freevars[oparg];</span><br><span class="line">    PyCell_Set(x, w);</span><br><span class="line">    Py_DECREF(w);</span><br><span class="line">    DISPATCH();</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 <p>用类似的python例子来类比，<code>PyCellObject</code>就像一个容器，对应的就是绑定的变量名，而变量名对应的对象的变化，也就是<code>PyCellObject</code>持有的引用的变化。</p>
 <figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># closure by value</span></span><br><span class="line">a = <span class="number">1</span></span><br><span class="line">b = a</span><br><span class="line">a = <span class="number">2</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># closure by reference</span></span><br><span class="line">a = [<span class="number">1</span>]</span><br><span class="line">b = a</span><br><span class="line">a[<span class="number">0</span>] = <span class="number">2</span></span><br></pre></td></tr></table></figure>
 
@@ -393,6 +393,10 @@
             <span class="post-nav-divider"></span>
 
             <div class="post-nav-prev post-nav-item">
+              
+                <a href="/2019/11/08/sqlite-learning/" rel="prev" title="SQLite Learning Resource">
+                  SQLite Learning Resource <i class="fa fa-chevron-right"></i>
+                </a>
               
             </div>
           </div>
@@ -449,7 +453,7 @@
         
           <a href="/archives/">
         
-          <span class="site-state-item-count">8</span>
+          <span class="site-state-item-count">9</span>
           <span class="site-state-item-name">日志</span>
         </a>
       </div>
@@ -472,7 +476,9 @@
         
           
         
-        <span class="site-state-item-count">4</span>
+          
+        
+        <span class="site-state-item-count">5</span>
         <span class="site-state-item-name">分类</span>
         </a>
       </div>
@@ -515,7 +521,11 @@
         
           
         
-        <span class="site-state-item-count">14</span>
+          
+        
+          
+        
+        <span class="site-state-item-count">16</span>
         <span class="site-state-item-name">标签</span>
         </a>
       </div>
@@ -592,7 +602,7 @@
     <span class="post-meta-item-icon">
       <i class="fa fa-coffee"></i>
     </span>
-    <span title="站点阅读时长">2:33</span>
+    <span title="站点阅读时长">2:36</span>
 </div>
   <div class="powered-by">由 <a href="https://hexo.io" class="theme-link" rel="noopener" target="_blank">Hexo</a> 强力驱动 v3.9.0</div>
   <span class="post-meta-divider">|</span>
