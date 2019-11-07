@@ -60,17 +60,24 @@
 {%- endfor %}
 
 {% if theme.graphviz.enable %}
-  <script src='https://cdnjs.cloudflare.com/ajax/libs/viz.js/1.7.1/viz.js'></script>
+  <script src='https://cdnjs.cloudflare.com/ajax/libs/viz.js/1.8.2/viz.js'></script>
   <script>
     String.prototype.chineseChar2englishChar = function chineseChar2englishChar(){
-    // 将单引号‘’都转换成'，将双引号“”都转换成"
-    var str = this.replace(/\’|\‘/g,"'").replace(/\“|\”/g,"\"");
-    // 将中括号【】转换成[]，将大括号｛｝转换成{}
-    str = str.replace(/\【/g,"[").replace(/\】/g,"]").replace(/\｛/g,"{").replace(/\｝/g,"}");
-    // 将逗号，转换成,，将：转换成:
-    str = str.replace(/，/g,",").replace(/：/g,":");
-    return str;
-}
+      // 将单引号‘’都转换成'，将双引号“”都转换成"
+      var str = this.replace(/\’|\‘/g,"'").replace(/\“|\”/g,"\"");
+      // 将中括号【】转换成[]，将大括号｛｝转换成{}
+      str = str.replace(/\【/g,"[").replace(/\】/g,"]").replace(/\｛/g,"{").replace(/\｝/g,"}");
+      // 将逗号，转换成,，将：转换成:
+      str = str.replace(/，/g,",").replace(/：/g,":");
+      str = str.replace(/《/g, "<").replace(/》/g, ">");
+      return str;
+    }
+
+    String.prototype.htmldecode = function htmlDecode () {
+       var ele = document.createElement('span');
+       ele.appendChild(document.createTextNode(this));
+       return ele.innerHTML;
+    }
 
     let vizObjects = document.querySelectorAll('.graphviz')
 
