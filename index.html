@@ -225,6 +225,264 @@
   
   
   <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://huangsunyang.com/2020/01/01/cpython-module/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="_huang">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/portrait.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Decode">
+    </span>
+      <header class="post-header">
+
+        
+          <h1 class="post-title" itemprop="name headline">
+              
+              <a href="/2020/01/01/cpython-module/" class="post-title-link" itemprop="url">CPython Modules</a>
+            
+          </h1>
+        
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              
+                
+              
+
+              <time title="创建时间：2020-01-01 15:11:47 / 修改时间：15:51:51" itemprop="dateCreated datePublished" datetime="2020-01-01T15:11:47+08:00">2020-01-01</time>
+            </span>
+          
+            
+
+            
+          
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing"><a href="/categories/python源码/" itemprop="url" rel="index"><span itemprop="name">python源码</span></a></span>
+
+                
+                
+              
+            </span>
+          
+
+          
+          <br>
+            <span class="post-meta-item" title="本文字数">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-file-word-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">本文字数：</span>
+              
+              <span>315</span>
+            </span>
+          
+            <span class="post-meta-item" title="阅读时长">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-clock-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">阅读时长 &asymp;</span>
+              
+              <span>2 分钟</span>
+            </span>
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          
+            <h2 id="Built-in-Modules的初始化"><a href="#Built-in-Modules的初始化" class="headerlink" title="Built-in Modules的初始化"></a>Built-in Modules的初始化</h2><p>涉及python初始化的流程，简要分析如下：</p>
+<ul>
+<li><code>main</code> @Modules/python.c</li>
+<li><code>Py_Main</code> @Modules/main.c</li>
+<li><code>Py_Initialize</code> @Python/pythonrun.c</li>
+<li><code>Py_InitializeEx</code> @Python/pythonrun.c</li>
+<li><code>_PyBuiltin_Init</code> @Python/bltinmodule.c</li>
+<li><code>Py_InitModule4</code> @Python/modsupport.c</li>
+<li><code>PyImport_AddModule</code> @Python/import.c</li>
+<li><code>_PyImport_AddModuleObject</code> @Python/import.c</li>
+</ul>
+
+          
+        
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+          <div class="post-eof"></div>
+        
+      </footer>
+  </div>
+  
+  
+  
+  </article>
+
+    
+      
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://huangsunyang.com/2019/11/23/LR-parser/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="_huang">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/portrait.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Decode">
+    </span>
+      <header class="post-header">
+
+        
+          <h1 class="post-title" itemprop="name headline">
+              
+              <a href="/2019/11/23/LR-parser/" class="post-title-link" itemprop="url">LR(k) Parser</a>
+            
+          </h1>
+        
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              
+                
+              
+
+              <time title="创建时间：2019-11-23 00:10:49" itemprop="dateCreated datePublished" datetime="2019-11-23T00:10:49+08:00">2019-11-23</time>
+            </span>
+          
+            
+
+            
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-calendar-check-o"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2020-02-05 15:13:14" itemprop="dateModified" datetime="2020-02-05T15:13:14+08:00">2020-02-05</time>
+              </span>
+            
+          
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing"><a href="/categories/编译原理/" itemprop="url" rel="index"><span itemprop="name">编译原理</span></a></span>
+
+                
+                
+              
+            </span>
+          
+
+          
+          <br>
+            <span class="post-meta-item" title="本文字数">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-file-word-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">本文字数：</span>
+              
+              <span>2.1k</span>
+            </span>
+          
+            <span class="post-meta-item" title="阅读时长">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-clock-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">阅读时长 &asymp;</span>
+              
+              <span>10 分钟</span>
+            </span>
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>早在去年11月下旬，我就想自己实现一个LR语法分析器，可自身主观能动性不足，拖延了一个多月的时间才正式开工。终于在上班前夕的自我隔离期间，花了两个下午的时间完成了一个LR(0)语法分析器的雏形，因而写下该篇日志记录一下。</p>
+<h2 id="什么是LR-k-语法分析技术"><a href="#什么是LR-k-语法分析技术" class="headerlink" title="什么是LR(k)语法分析技术"></a>什么是LR(k)语法分析技术</h2><h3 id="L-R-k分别是什么意思"><a href="#L-R-k分别是什么意思" class="headerlink" title="L/R/k分别是什么意思"></a>L/R/k分别是什么意思</h3><ul>
+<li>L的意思是from <strong>L</strong>eft to right，即从左到右来分析输入</li>
+<li>R的意思是构造出的是最右推导，即<strong>R</strong>ightmost</li>
+<li>k的意思是在语法分析决定时向前看k个符号，k省略则为1</li>
+</ul>
+<h3 id="自底向上的语法分析技术"><a href="#自底向上的语法分析技术" class="headerlink" title="自底向上的语法分析技术"></a>自底向上的语法分析技术</h3><p>LR语法分析技术是一种自底向上的语法分析技术，自底向上也就是从一个非终结符串开始规约的过程，每次归约会使用一个产生式将其中的一个子串（称为<strong>句柄</strong>）替换为该产生式左侧的非终结符，中间产物被称为是一个<strong>最右句型</strong>。例如，对于以下的文法：</p>
+          <!--noindex-->
+          
+            <div class="post-button text-center">
+              <a class="btn" href="/2019/11/23/LR-parser/#more" rel="contents">
+                阅读全文 &raquo;
+              </a>
+            </div>
+          
+          <!--/noindex-->
+        
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+          <div class="post-eof"></div>
+        
+      </footer>
+  </div>
+  
+  
+  
+  </article>
+
+    
+      
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
     <link itemprop="mainEntityOfPage" href="http://huangsunyang.com/2019/11/08/sqlite-learning/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -1246,150 +1504,12 @@
   </article>
 
     
-      
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://huangsunyang.com/2019/08/09/hello-world/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="_huang">
-      <meta itemprop="description" content="">
-      <meta itemprop="image" content="/images/portrait.jpg">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Decode">
-    </span>
-      <header class="post-header">
-
-        
-          <h1 class="post-title" itemprop="name headline">
-              
-              <a href="/2019/08/09/hello-world/" class="post-title-link" itemprop="url">Hello Hexo I</a>
-            
-          </h1>
-        
-
-        <div class="post-meta">
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              <span class="post-meta-item-text">发表于</span>
-
-              
-                
-              
-
-              <time title="创建时间：2019-08-09 17:26:38" itemprop="dateCreated datePublished" datetime="2019-08-09T17:26:38+08:00">2019-08-09</time>
-            </span>
-          
-            
-
-            
-              <span class="post-meta-item">
-                <span class="post-meta-item-icon">
-                  <i class="fa fa-calendar-check-o"></i>
-                </span>
-                <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2019-08-10 18:10:38" itemprop="dateModified" datetime="2019-08-10T18:10:38+08:00">2019-08-10</time>
-              </span>
-            
-          
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
-              </span>
-              <span class="post-meta-item-text">分类于</span>
-              
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing"><a href="/categories/日常工具/" itemprop="url" rel="index"><span itemprop="name">日常工具</span></a></span>
-
-                
-                
-              
-            </span>
-          
-
-          
-          <br>
-            <span class="post-meta-item" title="本文字数">
-              <span class="post-meta-item-icon">
-                <i class="fa fa-file-word-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">本文字数：</span>
-              
-              <span>1.8k</span>
-            </span>
-          
-            <span class="post-meta-item" title="阅读时长">
-              <span class="post-meta-item-icon">
-                <i class="fa fa-clock-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">阅读时长 &asymp;</span>
-              
-              <span>9 分钟</span>
-            </span>
-          
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-          <h3 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h3><p>第一篇<a href="https://hexo.io/" target="_blank" rel="noopener">Hexo</a>的博客，想了想还是写下搭建博客的过程，网上已经有不少类似的教程了，比如我所参考的<a href="http://www.jianshu.com/p/e99ed60390a8" target="_blank" rel="noopener">20分钟教你使用hexo搭建github博客</a>就是一篇很不错的教程，从Github账号的注册到node.js的安装都详细介绍了。相比之下，我这里的介绍就稍微简略一些了。</p>
-<h3 id="依赖"><a href="#依赖" class="headerlink" title="依赖"></a>依赖</h3><ul>
-<li>Github账号</li>
-<li>git</li>
-<li>node.js</li>
-</ul>
-<h3 id="在github创建repo"><a href="#在github创建repo" class="headerlink" title="在github创建repo"></a>在github创建repo</h3><p>在解决了上述依赖的情况下，首先需要在Github上创建一个新的repository，命名的规范如下，比如我的Github账户名为<strong>huangsunyang</strong>，那么这个repository的名字就为<strong>huangsunyang.github.io</strong>。</p>
-<p>接下来，在电脑的某处新建一个文件夹，用于存放博客的数据文件。文件夹的选择根据个人的要求有所不同：</p>
-<ul>
-<li>如果你仅仅需要在一台电脑上更新你的博客，那文件夹的位置和名称可以任意选择</li>
-<li>如果你需要将数据存放在云端，比如Github上，你可以选择新建一个repository，将其作为你的博客文件夹</li>
-<li>如果你既想将数据其存放在云端，又不想新建一个repository，那么，你的数据可以存放在<strong>huangsunyang.github.io</strong>的另一个分支上（此处以我的名字为例，实际上是：[你的用户名].github.io，下同）。我的教程就按照这一方案来讲解。</li>
-</ul>
-<p>首先，将Github上创建的<strong>huangsunyang.github.io</strong>同步到本地<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ git <span class="built_in">clone</span> https://github.com/huangsunyang/huangsunyang.github.io</span><br></pre></td></tr></table></figure></p>
-          <!--noindex-->
-          
-            <div class="post-button text-center">
-              <a class="btn" href="/2019/08/09/hello-world/#more" rel="contents">
-                阅读全文 &raquo;
-              </a>
-            </div>
-          
-          <!--/noindex-->
-        
-      
-    </div>
-
-    
-    
-    
-      <footer class="post-footer">
-          <div class="post-eof"></div>
-        
-      </footer>
-  </div>
-  
-  
-  
-  </article>
-
-    
   </section>
 
   
+  <nav class="pagination">
+    <span class="page-number current">1</span><a class="page-number" href="/page/2/">2</a><a class="extend next" rel="next" href="/page/2/"><i class="fa fa-angle-right" aria-label="下一页"></i></a>
+  </nav>
 
 
           </div>
@@ -1424,7 +1544,7 @@
         
           <a href="/archives/">
         
-          <span class="site-state-item-count">9</span>
+          <span class="site-state-item-count">11</span>
           <span class="site-state-item-name">日志</span>
         </a>
       </div>
@@ -1496,7 +1616,11 @@
         
           
         
-        <span class="site-state-item-count">16</span>
+          
+        
+          
+        
+        <span class="site-state-item-count">18</span>
         <span class="site-state-item-name">标签</span>
         </a>
       </div>
@@ -1542,7 +1666,7 @@
 
     <footer id="footer" class="footer">
       <div class="footer-inner">
-        <div class="copyright">&copy; <span itemprop="copyrightYear">2019</span>
+        <div class="copyright">&copy; <span itemprop="copyrightYear">2020</span>
   <span class="with-love" id="animate">
     <i class="fa fa-user"></i>
   </span>
@@ -1551,12 +1675,12 @@
     <span class="post-meta-item-icon">
       <i class="fa fa-area-chart"></i>
     </span>
-    <span title="站点总字数">31k</span>
+    <span title="站点总字数">34k</span>
     <span class="post-meta-divider">|</span>
     <span class="post-meta-item-icon">
       <i class="fa fa-coffee"></i>
     </span>
-    <span title="站点阅读时长">2:36</span>
+    <span title="站点阅读时长">2:48</span>
 </div>
   <div class="powered-by">由 <a href="https://hexo.io" class="theme-link" rel="noopener" target="_blank">Hexo</a> 强力驱动 v3.9.0</div>
   <span class="post-meta-divider">|</span>
@@ -1682,9 +1806,11 @@
       
     
       
-        
+    
       
     
+      
+        
       
     
   

@@ -55,19 +55,22 @@
   };
 </script>
 
-  <meta name="description" content="WHY SQLite为什么要学SQLite？起因来源于云风的《Lua源码赏析》这本小册子，里面提到了reddit上的一个问题，问的是最值得阅读的well-designed的开源项目，其中SQLite广受好评，此外就是Lua的虚拟机（等我python再学习深入后也可以对照着看看Lua，毕竟Lua相对简单，其实更容易上手）。此外，作为一个非科班出生的客户端程序，对于服务端的一些知识了解其实是相对缺乏的">
-<meta name="keywords" content="源码,sqlite,c">
+  <meta name="description" content="前言早在去年11月下旬，我就想自己实现一个LR语法分析器，可自身主观能动性不足，拖延了一个多月的时间才正式开工。终于在上班前夕的自我隔离期间，花了两个下午的时间完成了一个LR(0)语法分析器的雏形，因而写下该篇日志记录一下。 什么是LR(k)语法分析技术L/R/k分别是什么意思 L的意思是from Left to right，即从左到右来分析输入 R的意思是构造出的是最右推导，即Rightmost">
+<meta name="keywords" content="编译原理,语法分析">
 <meta property="og:type" content="article">
-<meta property="og:title" content="SQLite Learning Resource">
-<meta property="og:url" content="http://huangsunyang.com/2019/11/08/sqlite-learning/index.html">
+<meta property="og:title" content="LR(k) Parser">
+<meta property="og:url" content="http://huangsunyang.com/2019/11/23/LR-parser/index.html">
 <meta property="og:site_name" content="Decode">
-<meta property="og:description" content="WHY SQLite为什么要学SQLite？起因来源于云风的《Lua源码赏析》这本小册子，里面提到了reddit上的一个问题，问的是最值得阅读的well-designed的开源项目，其中SQLite广受好评，此外就是Lua的虚拟机（等我python再学习深入后也可以对照着看看Lua，毕竟Lua相对简单，其实更容易上手）。此外，作为一个非科班出生的客户端程序，对于服务端的一些知识了解其实是相对缺乏的">
+<meta property="og:description" content="前言早在去年11月下旬，我就想自己实现一个LR语法分析器，可自身主观能动性不足，拖延了一个多月的时间才正式开工。终于在上班前夕的自我隔离期间，花了两个下午的时间完成了一个LR(0)语法分析器的雏形，因而写下该篇日志记录一下。 什么是LR(k)语法分析技术L/R/k分别是什么意思 L的意思是from Left to right，即从左到右来分析输入 R的意思是构造出的是最右推导，即Rightmost">
 <meta property="og:locale" content="zh-CN">
-<meta property="og:updated_time" content="2019-11-07T16:47:19.956Z">
+<meta property="og:image" content="http://huangsunyang.com/2019/11/23/LR-parser/shift-reduce-parser.png">
+<meta property="og:image" content="http://huangsunyang.com/2019/11/23/LR-parser/LR0-DFA.png">
+<meta property="og:updated_time" content="2020-02-05T07:13:14.617Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="SQLite Learning Resource">
-<meta name="twitter:description" content="WHY SQLite为什么要学SQLite？起因来源于云风的《Lua源码赏析》这本小册子，里面提到了reddit上的一个问题，问的是最值得阅读的well-designed的开源项目，其中SQLite广受好评，此外就是Lua的虚拟机（等我python再学习深入后也可以对照着看看Lua，毕竟Lua相对简单，其实更容易上手）。此外，作为一个非科班出生的客户端程序，对于服务端的一些知识了解其实是相对缺乏的">
-  <link rel="canonical" href="http://huangsunyang.com/2019/11/08/sqlite-learning/">
+<meta name="twitter:title" content="LR(k) Parser">
+<meta name="twitter:description" content="前言早在去年11月下旬，我就想自己实现一个LR语法分析器，可自身主观能动性不足，拖延了一个多月的时间才正式开工。终于在上班前夕的自我隔离期间，花了两个下午的时间完成了一个LR(0)语法分析器的雏形，因而写下该篇日志记录一下。 什么是LR(k)语法分析技术L/R/k分别是什么意思 L的意思是from Left to right，即从左到右来分析输入 R的意思是构造出的是最右推导，即Rightmost">
+<meta name="twitter:image" content="http://huangsunyang.com/2019/11/23/LR-parser/shift-reduce-parser.png">
+  <link rel="canonical" href="http://huangsunyang.com/2019/11/23/LR-parser/">
 
 
 <script id="page-configurations">
@@ -81,7 +84,7 @@
   };
 </script>
 
-  <title>SQLite Learning Resource | Decode</title>
+  <title>LR(k) Parser | Decode</title>
   
 
 
@@ -231,7 +234,7 @@
   
   
   <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://huangsunyang.com/2019/11/08/sqlite-learning/">
+    <link itemprop="mainEntityOfPage" href="http://huangsunyang.com/2019/11/23/LR-parser/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="name" content="_huang">
@@ -245,7 +248,7 @@
       <header class="post-header">
 
         
-          <h1 class="post-title" itemprop="name headline">SQLite Learning Resource
+          <h1 class="post-title" itemprop="name headline">LR(k) Parser
 
             
           </h1>
@@ -262,11 +265,19 @@
                 
               
 
-              <time title="创建时间：2019-11-08 00:07:47 / 修改时间：00:47:19" itemprop="dateCreated datePublished" datetime="2019-11-08T00:07:47+08:00">2019-11-08</time>
+              <time title="创建时间：2019-11-23 00:10:49" itemprop="dateCreated datePublished" datetime="2019-11-23T00:10:49+08:00">2019-11-23</time>
             </span>
           
             
 
+            
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-calendar-check-o"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2020-02-05 15:13:14" itemprop="dateModified" datetime="2020-02-05T15:13:14+08:00">2020-02-05</time>
+              </span>
             
           
             <span class="post-meta-item">
@@ -275,7 +286,7 @@
               </span>
               <span class="post-meta-item-text">分类于</span>
               
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing"><a href="/categories/sqlite源码/" itemprop="url" rel="index"><span itemprop="name">sqlite源码</span></a></span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing"><a href="/categories/编译原理/" itemprop="url" rel="index"><span itemprop="name">编译原理</span></a></span>
 
                 
                 
@@ -292,7 +303,7 @@
               
                 <span class="post-meta-item-text">本文字数：</span>
               
-              <span>595</span>
+              <span>2.1k</span>
             </span>
           
             <span class="post-meta-item" title="阅读时长">
@@ -302,7 +313,7 @@
               
                 <span class="post-meta-item-text">阅读时长 &asymp;</span>
               
-              <span>3 分钟</span>
+              <span>10 分钟</span>
             </span>
           
 
@@ -315,23 +326,52 @@
     <div class="post-body" itemprop="articleBody">
 
       
-        <h2 id="WHY-SQLite"><a href="#WHY-SQLite" class="headerlink" title="WHY SQLite"></a>WHY SQLite</h2><p>为什么要学<code>SQLite</code>？起因来源于云风的《Lua源码赏析》这本小册子，里面提到了<a href="https://www.reddit.com/r/programming/comments/63hth/ask_reddit_which_oss_codebases_out_there_are_so/" target="_blank" rel="noopener">reddit上的一个问题</a>，问的是最值得阅读的well-designed的开源项目，其中<code>SQLite</code>广受好评，此外就是<code>Lua</code>的虚拟机（等我<code>python</code>再学习深入后也可以对照着看看<code>Lua</code>，毕竟<code>Lua</code>相对简单，其实更容易上手）。此外，作为一个非科班出生的客户端程序，对于服务端的一些知识了解其实是相对缺乏的，数据库一直是我的知识盲区之一，也希望乘此机会了解数据库的相关知识。</p>
+        <h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>早在去年11月下旬，我就想自己实现一个LR语法分析器，可自身主观能动性不足，拖延了一个多月的时间才正式开工。终于在上班前夕的自我隔离期间，花了两个下午的时间完成了一个LR(0)语法分析器的雏形，因而写下该篇日志记录一下。</p>
+<h2 id="什么是LR-k-语法分析技术"><a href="#什么是LR-k-语法分析技术" class="headerlink" title="什么是LR(k)语法分析技术"></a>什么是LR(k)语法分析技术</h2><h3 id="L-R-k分别是什么意思"><a href="#L-R-k分别是什么意思" class="headerlink" title="L/R/k分别是什么意思"></a>L/R/k分别是什么意思</h3><ul>
+<li>L的意思是from <strong>L</strong>eft to right，即从左到右来分析输入</li>
+<li>R的意思是构造出的是最右推导，即<strong>R</strong>ightmost</li>
+<li>k的意思是在语法分析决定时向前看k个符号，k省略则为1</li>
+</ul>
+<h3 id="自底向上的语法分析技术"><a href="#自底向上的语法分析技术" class="headerlink" title="自底向上的语法分析技术"></a>自底向上的语法分析技术</h3><p>LR语法分析技术是一种自底向上的语法分析技术，自底向上也就是从一个非终结符串开始规约的过程，每次归约会使用一个产生式将其中的一个子串（称为<strong>句柄</strong>）替换为该产生式左侧的非终结符，中间产物被称为是一个<strong>最右句型</strong>。例如，对于以下的文法：</p>
 <a id="more"></a>
-<h2 id="如何学习SQLite"><a href="#如何学习SQLite" class="headerlink" title="如何学习SQLite"></a>如何学习SQLite</h2><p>在写这篇文章的时候，我还开始学习，只是做了这个决定，因此现在的我是从零开始。我所设想的学习过程主要分为三个阶段</p>
-<h3 id="学习使用SQLite"><a href="#学习使用SQLite" class="headerlink" title="学习使用SQLite"></a>学习使用SQLite</h3><p>首先自然要学会<code>SQLite</code>数据库的使用，也可以顺便看看<code>python</code>提供的操作<code>SQLite</code>的api，这个时间不需要太长，大概一两天的时间，熟悉一下基本的概念即可。我目前搜集到的资料包括：</p>
+<blockquote>
+<p>expr := expr + expr</p>
+<p>expr := num</p>
+</blockquote>
+<p>输入符号串<code>num + num</code>经历的归约过程如下，每次归约过程中的句柄已加粗：</p>
+<blockquote>
+<p><strong>num</strong> + num -&gt; expr + <strong>num</strong> -&gt; <strong>expr + expr</strong> -&gt; expr</p>
+</blockquote>
+<h3 id="移入-归约语法分析技术"><a href="#移入-归约语法分析技术" class="headerlink" title="移入-归约语法分析技术"></a>移入-归约语法分析技术</h3><p>LR语法分析技术是一种移入-归约语法分析技术，其使用一个<strong>符号栈</strong>来保存文法符号，还有一个输入缓冲区来保存还未分析的符号串。对于上述输入串的分析过程如下。</p>
+<p><img src="shift-reduce-parser.png" style="zoom: 33%;"></p>
+<h3 id="什么是LR文法"><a href="#什么是LR文法" class="headerlink" title="什么是LR文法"></a>什么是LR文法</h3><p>注意到，在移入-归约语法分析过程中，句柄总是能够在符号栈的栈顶被识别，这样的文法就是LR文法。而识别句柄时，我们所能够依据的信息也就是右侧的待分析的输入串，LR(k)文法中的k也就是需要输入串中符号的数量。</p>
+<h2 id="LR语法分析技术"><a href="#LR语法分析技术" class="headerlink" title="LR语法分析技术"></a>LR语法分析技术</h2><h3 id="LR-0-语法分析技术"><a href="#LR-0-语法分析技术" class="headerlink" title="LR(0)语法分析技术"></a>LR(0)语法分析技术</h3><p>LR分析法的核心是确定归约的时机。当符号栈中的符号串满足某条产生式的时候，这就可能是一个归约的时机。在普通的LR(0)分析法中，这就是一个确定的归约时机。实际上，我们能够当前LR(0)语法分析器的状态用若干个<strong>项目</strong>来表示，项目包含一条产生式和一个点，其表示了当前识别到该产生式的位置。</p>
+<p>通常来说，对于某个LR文法，我们会构建一个增广文法，使得文法有唯一的接受产生式，即接受符号只出现在一条产生式左侧。对于前文中的例子，我们会添加一条产生式<code>S := expr</code>和一个新的接受符号<code>S</code>。</p>
+<p>此时，初始的项目为<code>S := ·expr</code>，该项目在接受到符号<code>expr</code>的时候会转移到项目<code>S := expr·</code>，这也就是接受项目，接受项目在获得<code>$</code>符号时即表示接受成功。更为一般的，对于每个项目<code>x := A·yB</code>，接收符号<code>y</code>能够转移到项目<code>x := Ay·B</code>。同时，初始项目还包括两个等价的项目，<code>expr := ·expr + expr</code>以及<code>expr := ·num</code>，这也就是NFA中的ε转移。</p>
+<p>接下来就是NFA转DFA算法了，我们可以将一组项目集合看作新的DFA的一个状态，从而得到LR(0)类DFA表示。</p>
+<p><img src="LR0-DFA.png" alt></p>
+<p>但是，LR文法很显然是正则语言的超集，因而是不可能通过一个DFA或者NFA来表示的。该DFA表示能够告诉我们在遇到不同符号时该移入还是归约。我们可以对移入-归约语法分析技术做一些小改动，将符号栈更改为状态栈，初始栈中存在初始状态。当前状态也就是栈顶的状态，当遇到输入符号时，</p>
+<ol>
+<li>首先查看DFA中当前状态是否能通过该符号转移到下个状态，如果可以，将新状态入栈。</li>
+<li>如果当前状态中包含一条可归约的产生式，则应该回到接收该产生式右侧第一个符号时的状态，然后将归约生成的符号所转移到的状态入栈。</li>
+</ol>
+<h3 id="SLR语法分析技术"><a href="#SLR语法分析技术" class="headerlink" title="SLR语法分析技术"></a>SLR语法分析技术</h3><p>在LR(0)语法分析中，当前状态中只要有归约项目，我们就会进行归约操作。这样会遇到两个问题：</p>
 <ul>
-<li><a href="https://www.runoob.com/sqlite/sqlite-python.html" target="_blank" rel="noopener">runoob网页资料</a></li>
-<li><a href="https://www.sqlite.org/index.html" target="_blank" rel="noopener">SQLite官方文档SQL语法介绍</a></li>
-<li><a href="https://www.tutorialspoint.com/sqlite/index.htm" target="_blank" rel="noopener">tutorialspoint网站教程</a></li>
-<li>O’REILLY出版社的Using SQLite，大概看了一些感觉这本最好</li>
+<li>如果当前项目中还有移入项目，就会出现移入-归约冲突</li>
+<li>如果当前项目中有多个归约项目，就会出现归约-归约冲突</li>
 </ul>
-<h3 id="了解SQLite架构"><a href="#了解SQLite架构" class="headerlink" title="了解SQLite架构"></a>了解SQLite架构</h3><p>主要参考了<a href="https://www.zhihu.com/question/22819578" target="_blank" rel="noopener">知乎上广大网友走过的老路</a>，包含了一部分官方文档和书籍，以及一些博客：</p>
+<p>SLR语法分析尝试用归约产生式左侧符号的<code>follow</code>集来解决这两类冲突：</p>
 <ul>
-<li><a href="https://www.sqlite.org/arch.html" target="_blank" rel="noopener">官方文档中的架构介绍</a></li>
-<li><a href="https://b-ok.cc/book/488419/0c3177" target="_blank" rel="noopener">Inside SQLite</a>这本书</li>
+<li>对于移入-归约冲突，如果follow集与移入符号不相交，冲突即可解决</li>
+<li>对于归约-归约冲突，如果这多个归约产生式左侧符号的follow集不相交，冲突也可解决</li>
 </ul>
-<h3 id="源代码学习"><a href="#源代码学习" class="headerlink" title="源代码学习"></a>源代码学习</h3><p>这一部分内容暂时没有能力规划..</p>
-
+<p>SLR实际上是SLR(1)，其向前看了一个字符，其中的S的意思是<code>simple</code>，实际上，SLR分析法确实通过下一个字符和归约产生式左侧符号follow集的比较来选择移入还是归约，实现也非常简单，可以说是实至名归。</p>
+<h3 id="LR-1-语法分析技术"><a href="#LR-1-语法分析技术" class="headerlink" title="LR(1)语法分析技术"></a>LR(1)语法分析技术</h3><p>在SLR语法分析中，直接使用follow集来判断是有些武断的，这是归约的必要条件而非充分条件。因为follow集的计算与状态无关，只是一种筛选的方式。LR(1)分析法中将向后看的这1个符号加入到了状态中，具体的做法是在产生式中加入其后继符号。例如，初始产生式则会变为<code>S := expr, $</code>，因为S的后继符号只可能是$。在计算项目集闭包的时候，对于某个项目<code>x := A·yB, follow_set</code></p>
+<ul>
+<li>其直接产生的等价项目为<code>y := ·C, first(B follow_set)</code></li>
+<li>其接受符号<code>y</code>产生的项目为<code>x := Ay·B, follow_set</code></li>
+</ul>
+<h3 id="LALR语法分析技术"><a href="#LALR语法分析技术" class="headerlink" title="LALR语法分析技术"></a>LALR语法分析技术</h3>
     </div>
 
     
@@ -346,11 +386,9 @@
           
           <div class="post-tags">
             
-              <a href="/tags/源码/" rel="tag"># 源码</a>
+              <a href="/tags/编译原理/" rel="tag"># 编译原理</a>
             
-              <a href="/tags/sqlite/" rel="tag"># sqlite</a>
-            
-              <a href="/tags/c/" rel="tag"># c</a>
+              <a href="/tags/语法分析/" rel="tag"># 语法分析</a>
             
           </div>
         
@@ -360,8 +398,8 @@
           <div class="post-nav">
             <div class="post-nav-next post-nav-item">
               
-                <a href="/2019/11/05/cpython-closure/" rel="next" title="CPython Closure">
-                  <i class="fa fa-chevron-left"></i> CPython Closure
+                <a href="/2019/11/08/sqlite-learning/" rel="next" title="SQLite Learning Resource">
+                  <i class="fa fa-chevron-left"></i> SQLite Learning Resource
                 </a>
               
             </div>
@@ -370,8 +408,8 @@
 
             <div class="post-nav-prev post-nav-item">
               
-                <a href="/2019/11/23/LR-parser/" rel="prev" title="LR(k) Parser">
-                  LR(k) Parser <i class="fa fa-chevron-right"></i>
+                <a href="/2020/01/01/cpython-module/" rel="prev" title="CPython Modules">
+                  CPython Modules <i class="fa fa-chevron-right"></i>
                 </a>
               
             </div>
@@ -550,7 +588,7 @@
             
 
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#WHY-SQLite"><span class="nav-number">1.</span> <span class="nav-text">WHY SQLite</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#如何学习SQLite"><span class="nav-number">2.</span> <span class="nav-text">如何学习SQLite</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#学习使用SQLite"><span class="nav-number">2.1.</span> <span class="nav-text">学习使用SQLite</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#了解SQLite架构"><span class="nav-number">2.2.</span> <span class="nav-text">了解SQLite架构</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#源代码学习"><span class="nav-number">2.3.</span> <span class="nav-text">源代码学习</span></a></li></ol></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#前言"><span class="nav-number">1.</span> <span class="nav-text">前言</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#什么是LR-k-语法分析技术"><span class="nav-number">2.</span> <span class="nav-text">什么是LR(k)语法分析技术</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#L-R-k分别是什么意思"><span class="nav-number">2.1.</span> <span class="nav-text">L/R/k分别是什么意思</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#自底向上的语法分析技术"><span class="nav-number">2.2.</span> <span class="nav-text">自底向上的语法分析技术</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#移入-归约语法分析技术"><span class="nav-number">2.3.</span> <span class="nav-text">移入-归约语法分析技术</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#什么是LR文法"><span class="nav-number">2.4.</span> <span class="nav-text">什么是LR文法</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#LR语法分析技术"><span class="nav-number">3.</span> <span class="nav-text">LR语法分析技术</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#LR-0-语法分析技术"><span class="nav-number">3.1.</span> <span class="nav-text">LR(0)语法分析技术</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#SLR语法分析技术"><span class="nav-number">3.2.</span> <span class="nav-text">SLR语法分析技术</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#LR-1-语法分析技术"><span class="nav-number">3.3.</span> <span class="nav-text">LR(1)语法分析技术</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#LALR语法分析技术"><span class="nav-number">3.4.</span> <span class="nav-text">LALR语法分析技术</span></a></li></ol></li></ol></div>
             
 
           </div>
