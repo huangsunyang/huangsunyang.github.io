@@ -65,7 +65,7 @@
 <meta property="og:locale" content="zh-CN">
 <meta property="og:image" content="http://huangsunyang.com/2019/11/23/LR-parser/shift-reduce-parser.png">
 <meta property="og:image" content="http://huangsunyang.com/2019/11/23/LR-parser/LR0-DFA.png">
-<meta property="og:updated_time" content="2020-02-05T07:13:14.617Z">
+<meta property="og:updated_time" content="2020-02-05T08:49:49.884Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="LR(k) Parser">
 <meta name="twitter:description" content="前言早在去年11月下旬，我就想自己实现一个LR语法分析器，可自身主观能动性不足，拖延了一个多月的时间才正式开工。终于在上班前夕的自我隔离期间，花了两个下午的时间完成了一个LR(0)语法分析器的雏形，因而写下该篇日志记录一下。 什么是LR(k)语法分析技术L/R/k分别是什么意思 L的意思是from Left to right，即从左到右来分析输入 R的意思是构造出的是最右推导，即Rightmost">
@@ -276,7 +276,7 @@
                   <i class="fa fa-calendar-check-o"></i>
                 </span>
                 <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2020-02-05 15:13:14" itemprop="dateModified" datetime="2020-02-05T15:13:14+08:00">2020-02-05</time>
+                <time title="修改时间：2020-02-05 16:49:49" itemprop="dateModified" datetime="2020-02-05T16:49:49+08:00">2020-02-05</time>
               </span>
             
           
@@ -303,7 +303,7 @@
               
                 <span class="post-meta-item-text">本文字数：</span>
               
-              <span>2.1k</span>
+              <span>2.4k</span>
             </span>
           
             <span class="post-meta-item" title="阅读时长">
@@ -313,7 +313,7 @@
               
                 <span class="post-meta-item-text">阅读时长 &asymp;</span>
               
-              <span>10 分钟</span>
+              <span>12 分钟</span>
             </span>
           
 
@@ -371,7 +371,10 @@
 <li>其直接产生的等价项目为<code>y := ·C, first(B follow_set)</code></li>
 <li>其接受符号<code>y</code>产生的项目为<code>x := Ay·B, follow_set</code></li>
 </ul>
-<h3 id="LALR语法分析技术"><a href="#LALR语法分析技术" class="headerlink" title="LALR语法分析技术"></a>LALR语法分析技术</h3>
+<h3 id="LALR语法分析技术"><a href="#LALR语法分析技术" class="headerlink" title="LALR语法分析技术"></a>LALR语法分析技术</h3><p>在LR(1)分析法中，会产生一些状态，他们只有<code>follow_set</code>有区别，这一类项目集被称为<strong>同心项目集</strong>，LALR语法分析法的主要改进就是合并这些同心的项目集，减少冗余状态。我们将LR(1)项目集中忽略了<code>follow_set</code>的部分称为LR(0)项目集。</p>
+<p>由于没有亲自实现LALR语法分析器，其实现的算法在此先省略了，以后有时间再补上。一种朴素的算法是在LR(1)项目集的基础上合并同心项目集；另一种内存开销更小的算法是通过<code>follow_set</code>的传播来实现的。</p>
+<h3 id="小结"><a href="#小结" class="headerlink" title="小结"></a>小结</h3><p>按照语法分析的能力来排序，LR(0) &lt; SLR &lt; LALR &lt; LR(1)。按照状态的数量来排序，LR(0) = SLR = LALR &lt; LR(1)。</p>
+
     </div>
 
     
@@ -407,10 +410,6 @@
             <span class="post-nav-divider"></span>
 
             <div class="post-nav-prev post-nav-item">
-              
-                <a href="/2020/01/01/cpython-module/" rel="prev" title="CPython Modules">
-                  CPython Modules <i class="fa fa-chevron-right"></i>
-                </a>
               
             </div>
           </div>
@@ -467,7 +466,7 @@
         
           <a href="/archives/">
         
-          <span class="site-state-item-count">11</span>
+          <span class="site-state-item-count">10</span>
           <span class="site-state-item-name">日志</span>
         </a>
       </div>
@@ -543,7 +542,7 @@
         
           
         
-        <span class="site-state-item-count">18</span>
+        <span class="site-state-item-count">17</span>
         <span class="site-state-item-name">标签</span>
         </a>
       </div>
@@ -588,7 +587,7 @@
             
 
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#前言"><span class="nav-number">1.</span> <span class="nav-text">前言</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#什么是LR-k-语法分析技术"><span class="nav-number">2.</span> <span class="nav-text">什么是LR(k)语法分析技术</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#L-R-k分别是什么意思"><span class="nav-number">2.1.</span> <span class="nav-text">L/R/k分别是什么意思</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#自底向上的语法分析技术"><span class="nav-number">2.2.</span> <span class="nav-text">自底向上的语法分析技术</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#移入-归约语法分析技术"><span class="nav-number">2.3.</span> <span class="nav-text">移入-归约语法分析技术</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#什么是LR文法"><span class="nav-number">2.4.</span> <span class="nav-text">什么是LR文法</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#LR语法分析技术"><span class="nav-number">3.</span> <span class="nav-text">LR语法分析技术</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#LR-0-语法分析技术"><span class="nav-number">3.1.</span> <span class="nav-text">LR(0)语法分析技术</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#SLR语法分析技术"><span class="nav-number">3.2.</span> <span class="nav-text">SLR语法分析技术</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#LR-1-语法分析技术"><span class="nav-number">3.3.</span> <span class="nav-text">LR(1)语法分析技术</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#LALR语法分析技术"><span class="nav-number">3.4.</span> <span class="nav-text">LALR语法分析技术</span></a></li></ol></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#前言"><span class="nav-number">1.</span> <span class="nav-text">前言</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#什么是LR-k-语法分析技术"><span class="nav-number">2.</span> <span class="nav-text">什么是LR(k)语法分析技术</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#L-R-k分别是什么意思"><span class="nav-number">2.1.</span> <span class="nav-text">L/R/k分别是什么意思</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#自底向上的语法分析技术"><span class="nav-number">2.2.</span> <span class="nav-text">自底向上的语法分析技术</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#移入-归约语法分析技术"><span class="nav-number">2.3.</span> <span class="nav-text">移入-归约语法分析技术</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#什么是LR文法"><span class="nav-number">2.4.</span> <span class="nav-text">什么是LR文法</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#LR语法分析技术"><span class="nav-number">3.</span> <span class="nav-text">LR语法分析技术</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#LR-0-语法分析技术"><span class="nav-number">3.1.</span> <span class="nav-text">LR(0)语法分析技术</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#SLR语法分析技术"><span class="nav-number">3.2.</span> <span class="nav-text">SLR语法分析技术</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#LR-1-语法分析技术"><span class="nav-number">3.3.</span> <span class="nav-text">LR(1)语法分析技术</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#LALR语法分析技术"><span class="nav-number">3.4.</span> <span class="nav-text">LALR语法分析技术</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#小结"><span class="nav-number">3.5.</span> <span class="nav-text">小结</span></a></li></ol></li></ol></div>
             
 
           </div>
