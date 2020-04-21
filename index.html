@@ -225,6 +225,162 @@
   
   
   <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://huangsunyang.com/2020/04/21/cpython-super/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="_huang">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/portrait.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Decode">
+    </span>
+      <header class="post-header">
+
+        
+          <h1 class="post-title" itemprop="name headline">
+              
+              <a href="/2020/04/21/cpython-super/" class="post-title-link" itemprop="url">CPython Super</a>
+            
+          </h1>
+        
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              
+                
+              
+
+              <time title="创建时间：2020-04-21 21:55:05" itemprop="dateCreated datePublished" datetime="2020-04-21T21:55:05+08:00">2020-04-21</time>
+            </span>
+          
+            
+
+            
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-calendar-check-o"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2020-04-22 01:00:48" itemprop="dateModified" datetime="2020-04-22T01:00:48+08:00">2020-04-22</time>
+              </span>
+            
+          
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing"><a href="/categories/python源码/" itemprop="url" rel="index"><span itemprop="name">python源码</span></a></span>
+
+                
+                
+              
+            </span>
+          
+
+          
+          <br>
+            <span class="post-meta-item" title="本文字数">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-file-word-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">本文字数：</span>
+              
+              <span>2k</span>
+            </span>
+          
+            <span class="post-meta-item" title="阅读时长">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-clock-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">阅读时长 &asymp;</span>
+              
+              <span>10 分钟</span>
+            </span>
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          
+            <h2 id="什么是super"><a href="#什么是super" class="headerlink" title="什么是super"></a>什么是super</h2><p><code>super</code>实际上就是抽象的父类对象，用面向对象的方式来调用父类方法的一层封装。典型的使用方式如下：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Base</span><span class="params">(object)</span>:</span></span><br><span class="line">	<span class="function"><span class="keyword">def</span> <span class="title">__init__</span><span class="params">(self)</span>:</span></span><br><span class="line">		<span class="keyword">pass</span></span><br><span class="line">    </span><br><span class="line"><span class="meta">    @classmethod</span></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">test</span><span class="params">(cls)</span>:</span></span><br><span class="line">        <span class="keyword">pass</span></span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Derived</span><span class="params">(Base)</span>:</span></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">__init__</span><span class="params">(self)</span>:</span></span><br><span class="line">        super(Derived, self).__init__()     <span class="comment"># (1)</span></span><br><span class="line">        <span class="comment"># super().__init__()				# python3</span></span><br><span class="line">        <span class="comment"># Base.__init__(self)				# 非面向对象</span></span><br><span class="line">    </span><br><span class="line"><span class="meta">    @classmethod</span></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">test</span><span class="params">(cls)</span>:</span></span><br><span class="line">        super(Derived, cls).test()          <span class="comment"># (3)</span></span><br><span class="line">        <span class="comment"># super().test()					# python3</span></span><br></pre></td></tr></table></figure>
+<h2 id="super的四种用法"><a href="#super的四种用法" class="headerlink" title="super的四种用法"></a>super的四种用法</h2><p>根据<code>super</code>的文档，其一共有三种用法：</p>
+<ul>
+<li>super(type, obj) -&gt; bound super object; requires isinstance(obj, type)</li>
+<li>super(type) -&gt; unbound super object</li>
+<li>super(type, type2) -&gt;bound super object; requires issubclass(type2, type)</li>
+</ul>
+<p>其中，第二种用法相对少见。除此之外，在<code>python3</code>中，可以使用无参数的super。</p>
+<h2 id="super的实现"><a href="#super的实现" class="headerlink" title="super的实现"></a>super的实现</h2><p><code>super</code>在实现上是一个内置类型，定义在<code>typeobject.c</code>中，其结构体定义如下：</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">typedef</span> <span class="class"><span class="keyword">struct</span> &#123;</span></span><br><span class="line">    PyObject_HEAD</span><br><span class="line">    PyTypeObject *type;			<span class="comment">// __thisclass__ the class invoking super</span></span><br><span class="line">    PyObject *obj;				<span class="comment">// __self__ the instance invoking super</span></span><br><span class="line">    PyTypeObject *obj_type;		<span class="comment">// __self_class__ the type of __self__</span></span><br><span class="line">&#125; superobject;</span><br></pre></td></tr></table></figure>
+<p>简单来说，<code>super</code>实现的是一层封装，将对<code>super</code>对象的函数调用转发到对应的父类中去。父类的寻找遵循python中的<code>mro</code>顺序。</p>
+<h4 id="super对象的创建"><a href="#super对象的创建" class="headerlink" title="super对象的创建"></a>super对象的创建</h4><p>super对象的创建相对比较简单，只是将第第一个参数赋值给<code>type</code>，第二个参数赋值给<code>obj</code>，通过调用<code>supercheck</code>进行类型检查，并计算出第三个参数的值。规律如下：</p>
+<ul>
+<li><code>obj</code>是类型且<code>obj</code>需要是<code>type</code>的子类，则<code>obj_type</code>等于<code>obj</code></li>
+<li><code>obj</code>的类型是<code>type</code>的子类，则<code>obj_type</code>等于<code>Py_TYPE(obj)</code></li>
+<li><code>obj.__class__</code>是type的子类，则<code>obj_type</code>等于<code>obj.__class__</code></li>
+</ul>
+<h4 id="super对象获取父类数据"><a href="#super对象获取父类数据" class="headerlink" title="super对象获取父类数据"></a>super对象获取父类数据</h4><p>从super对象中获取数据用的是<code>super_getattro</code>函数，各种情况如下：</p>
+<ul>
+<li>如果<code>obj_type</code>为NULL，则直接从当前<code>super</code>对象中获取数据，通常是出错的情况</li>
+<li>如果获取的是<code>__class__</code>属性，则也从当前<code>super</code>对象获取</li>
+<li>从<code>obj_type.__mro__</code>中找到<code>type</code>，从这一项之后开始遍历，从中找到第一个类（新式类/旧式类），从中寻找该变量并返回。如果变量是一个<code>descriptor</code>，则尝试调用其<code>tp_descr_get</code>方法。</li>
+<li>如果寻找失败，则从当前<code>super</code>对象中获取数据</li>
+</ul>
+<h2 id="python3中的super"><a href="#python3中的super" class="headerlink" title="python3中的super"></a>python3中的super</h2><p><code>python3</code>中的<code>super</code>能够省略参数，其具体实现是从当前栈帧中寻找第一个参数作为<code>obj</code>，从闭包中寻找<code>__class__</code>作为<code>type</code>。后者的实现细节较为复杂，甚至可以说比较混乱：</p>
+<ul>
+<li>在语法分析阶段，如果使用了<code>super</code>关键字，就会隐式地将<code>__class__</code>加入到符号表</li>
+<li><code>drop_class_free</code>中将判断<code>__class__</code>是否在局部变量中，如果存在，将其删除并标记<code>ste_needs_class_closure</code></li>
+<li>编译阶段通过<code>ste_needs_class_closure</code>标志位判断将其隐式加入到类的<code>cellvars</code>中</li>
+</ul>
+<h2 id="参考资料"><a href="#参考资料" class="headerlink" title="参考资料"></a>参考资料</h2><ol>
+<li><a href="https://stackoverflow.com/questions/36993577/schr%C3%B6dingers-variable-the-class-cell-magically-appears-if-youre-checking" target="_blank" rel="noopener">https://stackoverflow.com/questions/36993577/schr%C3%B6dingers-variable-the-class-cell-magically-appears-if-youre-checking</a></li>
+<li><a href="https://www.artima.com/weblogs/viewpost.jsp?thread=281127" target="_blank" rel="noopener">https://www.artima.com/weblogs/viewpost.jsp?thread=281127</a></li>
+</ol>
+
+          
+        
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+          <div class="post-eof"></div>
+        
+      </footer>
+  </div>
+  
+  
+  
+  </article>
+
+    
+      
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
     <link itemprop="mainEntityOfPage" href="http://huangsunyang.com/2019/11/23/LR-parser/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -522,7 +678,7 @@
                   <i class="fa fa-calendar-check-o"></i>
                 </span>
                 <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2019-11-07 22:54:45" itemprop="dateModified" datetime="2019-11-07T22:54:45+08:00">2019-11-07</time>
+                <time title="修改时间：2020-04-21 23:45:12" itemprop="dateModified" datetime="2020-04-21T23:45:12+08:00">2020-04-21</time>
               </span>
             
           
@@ -573,8 +729,8 @@
 
       
           <h2 id="什么是闭包"><a href="#什么是闭包" class="headerlink" title="什么是闭包"></a>什么是闭包</h2><p>闭包<code>closure</code>指的是引用了上层函数作用域的变量。当编程语言支持函数能够作为返回值，则闭包的实现则不可或缺，在函数内定义的子函数引用了父函数的变量，就是使用了语言的闭包特性。python中，一个通常会令人困惑的例子如下：</p>
-<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">generate_funcs</span><span class="params">()</span>:</span></span><br><span class="line">    ret = []</span><br><span class="line">    <span class="keyword">for</span> i <span class="keyword">in</span> range(<span class="number">10</span>):</span><br><span class="line">        <span class="function"><span class="keyword">def</span> <span class="title">new_func</span><span class="params">()</span>:</span></span><br><span class="line">            <span class="keyword">print</span> i</span><br><span class="line">        ret.append(new_func)</span><br><span class="line">    <span class="keyword">return</span> ret</span><br><span class="line"></span><br><span class="line"><span class="keyword">for</span> func <span class="keyword">in</span> generate_funcs():</span><br><span class="line">    func()</span><br><span class="line">    </span><br><span class="line">// output</span><br><span class="line">// <span class="number">9</span></span><br><span class="line">// <span class="number">9</span></span><br><span class="line">// ...</span><br></pre></td></tr></table></figure>
-<p>大多数人的直觉反应会认为，程序最终会依次输出0到9，然而最终所有的函数都输出了9。因为闭包所绑定的是变量的名字，而不是变量的值，变量真正的值需要在运行时才能够确定。而当运行这几个内部函数时，变量<code>i</code>已经走完了循环，定格在了<code>9</code>这个值。如果想要绑定值，可以使用函数的默认参数来进行传递。</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">generate_funcs</span><span class="params">()</span>:</span></span><br><span class="line">	ret = []</span><br><span class="line">	<span class="keyword">for</span> i <span class="keyword">in</span> range(<span class="number">10</span>):</span><br><span class="line">		<span class="function"><span class="keyword">def</span> <span class="title">new_func</span><span class="params">()</span>:</span></span><br><span class="line">			<span class="keyword">print</span> i</span><br><span class="line">		ret.append(new_func)</span><br><span class="line">	<span class="keyword">return</span> ret</span><br><span class="line"></span><br><span class="line"><span class="keyword">for</span> func <span class="keyword">in</span> generate_funcs():</span><br><span class="line">	func()</span><br><span class="line">    </span><br><span class="line">// output</span><br><span class="line">// <span class="number">9</span></span><br><span class="line">// <span class="number">9</span></span><br><span class="line">// ...</span><br></pre></td></tr></table></figure>
+<p>大多数初学者的直觉反应，程序最终会依次输出0到9，然而最终所有的函数都输出了9。因为闭包所绑定的是变量的名字，而不是变量的值，变量真正的值需要在运行时才能够确定。而当运行这几个内部函数时，变量<code>i</code>已经走完了循环，定格在了<code>9</code>这个值。如果想要绑定值，可以使用函数的默认参数来进行传递。</p>
           <!--noindex-->
           
             <div class="post-button text-center">
@@ -1380,150 +1536,12 @@
   </article>
 
     
-      
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://huangsunyang.com/2019/08/09/hello-world/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="_huang">
-      <meta itemprop="description" content="">
-      <meta itemprop="image" content="/images/portrait.jpg">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Decode">
-    </span>
-      <header class="post-header">
-
-        
-          <h1 class="post-title" itemprop="name headline">
-              
-              <a href="/2019/08/09/hello-world/" class="post-title-link" itemprop="url">Hello Hexo I</a>
-            
-          </h1>
-        
-
-        <div class="post-meta">
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              <span class="post-meta-item-text">发表于</span>
-
-              
-                
-              
-
-              <time title="创建时间：2019-08-09 17:26:38" itemprop="dateCreated datePublished" datetime="2019-08-09T17:26:38+08:00">2019-08-09</time>
-            </span>
-          
-            
-
-            
-              <span class="post-meta-item">
-                <span class="post-meta-item-icon">
-                  <i class="fa fa-calendar-check-o"></i>
-                </span>
-                <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2019-08-10 18:10:38" itemprop="dateModified" datetime="2019-08-10T18:10:38+08:00">2019-08-10</time>
-              </span>
-            
-          
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
-              </span>
-              <span class="post-meta-item-text">分类于</span>
-              
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing"><a href="/categories/日常工具/" itemprop="url" rel="index"><span itemprop="name">日常工具</span></a></span>
-
-                
-                
-              
-            </span>
-          
-
-          
-          <br>
-            <span class="post-meta-item" title="本文字数">
-              <span class="post-meta-item-icon">
-                <i class="fa fa-file-word-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">本文字数：</span>
-              
-              <span>1.8k</span>
-            </span>
-          
-            <span class="post-meta-item" title="阅读时长">
-              <span class="post-meta-item-icon">
-                <i class="fa fa-clock-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">阅读时长 &asymp;</span>
-              
-              <span>9 分钟</span>
-            </span>
-          
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-          <h3 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h3><p>第一篇<a href="https://hexo.io/" target="_blank" rel="noopener">Hexo</a>的博客，想了想还是写下搭建博客的过程，网上已经有不少类似的教程了，比如我所参考的<a href="http://www.jianshu.com/p/e99ed60390a8" target="_blank" rel="noopener">20分钟教你使用hexo搭建github博客</a>就是一篇很不错的教程，从Github账号的注册到node.js的安装都详细介绍了。相比之下，我这里的介绍就稍微简略一些了。</p>
-<h3 id="依赖"><a href="#依赖" class="headerlink" title="依赖"></a>依赖</h3><ul>
-<li>Github账号</li>
-<li>git</li>
-<li>node.js</li>
-</ul>
-<h3 id="在github创建repo"><a href="#在github创建repo" class="headerlink" title="在github创建repo"></a>在github创建repo</h3><p>在解决了上述依赖的情况下，首先需要在Github上创建一个新的repository，命名的规范如下，比如我的Github账户名为<strong>huangsunyang</strong>，那么这个repository的名字就为<strong>huangsunyang.github.io</strong>。</p>
-<p>接下来，在电脑的某处新建一个文件夹，用于存放博客的数据文件。文件夹的选择根据个人的要求有所不同：</p>
-<ul>
-<li>如果你仅仅需要在一台电脑上更新你的博客，那文件夹的位置和名称可以任意选择</li>
-<li>如果你需要将数据存放在云端，比如Github上，你可以选择新建一个repository，将其作为你的博客文件夹</li>
-<li>如果你既想将数据其存放在云端，又不想新建一个repository，那么，你的数据可以存放在<strong>huangsunyang.github.io</strong>的另一个分支上（此处以我的名字为例，实际上是：[你的用户名].github.io，下同）。我的教程就按照这一方案来讲解。</li>
-</ul>
-<p>首先，将Github上创建的<strong>huangsunyang.github.io</strong>同步到本地<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ git <span class="built_in">clone</span> https://github.com/huangsunyang/huangsunyang.github.io</span><br></pre></td></tr></table></figure></p>
-          <!--noindex-->
-          
-            <div class="post-button text-center">
-              <a class="btn" href="/2019/08/09/hello-world/#more" rel="contents">
-                阅读全文 &raquo;
-              </a>
-            </div>
-          
-          <!--/noindex-->
-        
-      
-    </div>
-
-    
-    
-    
-      <footer class="post-footer">
-          <div class="post-eof"></div>
-        
-      </footer>
-  </div>
-  
-  
-  
-  </article>
-
-    
   </section>
 
   
+  <nav class="pagination">
+    <span class="page-number current">1</span><a class="page-number" href="/page/2/">2</a><a class="extend next" rel="next" href="/page/2/"><i class="fa fa-angle-right" aria-label="下一页"></i></a>
+  </nav>
 
 
           </div>
@@ -1558,7 +1576,7 @@
         
           <a href="/archives/">
         
-          <span class="site-state-item-count">10</span>
+          <span class="site-state-item-count">11</span>
           <span class="site-state-item-name">日志</span>
         </a>
       </div>
@@ -1597,8 +1615,6 @@
           
         
         
-        
-          
         
           
         
@@ -1689,12 +1705,12 @@
     <span class="post-meta-item-icon">
       <i class="fa fa-area-chart"></i>
     </span>
-    <span title="站点总字数">34k</span>
+    <span title="站点总字数">36k</span>
     <span class="post-meta-divider">|</span>
     <span class="post-meta-item-icon">
       <i class="fa fa-coffee"></i>
     </span>
-    <span title="站点阅读时长">2:48</span>
+    <span title="站点阅读时长">2:58</span>
 </div>
   <div class="powered-by">由 <a href="https://hexo.io" class="theme-link" rel="noopener" target="_blank">Hexo</a> 强力驱动 v3.9.0</div>
   <span class="post-meta-divider">|</span>
@@ -1822,9 +1838,9 @@
       
     
       
-        
-      
     
+      
+        
       
     
   
