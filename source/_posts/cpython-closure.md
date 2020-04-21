@@ -26,7 +26,7 @@ for func in generate_funcs():
 // ...
 ```
 
-大多数人的直觉反应会认为，程序最终会依次输出0到9，然而最终所有的函数都输出了9。因为闭包所绑定的是变量的名字，而不是变量的值，变量真正的值需要在运行时才能够确定。而当运行这几个内部函数时，变量`i`已经走完了循环，定格在了`9`这个值。如果想要绑定值，可以使用函数的默认参数来进行传递。
+大多数初学者的直觉反应，程序最终会依次输出0到9，然而最终所有的函数都输出了9。因为闭包所绑定的是变量的名字，而不是变量的值，变量真正的值需要在运行时才能够确定。而当运行这几个内部函数时，变量`i`已经走完了循环，定格在了`9`这个值。如果想要绑定值，可以使用函数的默认参数来进行传递。
 
 <!-- more -->
 
@@ -83,7 +83,7 @@ TARGET(MAKE_CLOSURE)
 }
 ```
 
-可以发现，`MAKE_CLOSURE`和`MAKE_FUNCTION`的实现几乎完全一样，唯一的不同就是多了`PyFunction_SetClosure`的操作，而`PyFunction_SetClosure`所设置的值则是由指令`LOAD_CLOSURE`获取的，这一条指令看上去也非常简单，只是将当前栈帧的`freevars`中的一些值打包成了`tuple`。
+可以发现，`MAKE_CLOSURE`和`MAKE_FUNCTION`的实现几乎完全一样，唯一的不同就是多了`PyFunction_SetClosure`的操作，可以简单理解为`x.func_closure = v`。而`PyFunction_SetClosure`所设置的值则是由指令`LOAD_CLOSURE`获取的，这一条指令看上去也非常简单，只是将当前栈帧的`freevars`中的一些值打包成了`tuple`。（注意这里的`freevars`对应的是`co_cellvars`加上`co_freevars`，真正加载到栈空间的其实是`cellvars`）
 
 ```c
 // freevars = f->f_localsplus + co->co_nlocals;
@@ -105,7 +105,7 @@ TARGET(LOAD_CLOSURE)
 
 ```c
 /* Allocate and initialize storage for cell vars, and copy free
-       vars into frame.  This isn't too efficient right now. */
+   vars into frame.  This isn't too efficient right now. */
 if (PyTuple_GET_SIZE(co->co_cellvars)) {
     int i, j, nargs, found;
     char *cellname, *argname;
@@ -118,12 +118,12 @@ if (PyTuple_GET_SIZE(co->co_cellvars)) {
         nargs++;
 
     /* Initialize each cell var, taking into account
-           cell vars that are initialized from arguments.
+       cell vars that are initialized from arguments.
 
-           Should arrange for the compiler to put cellvars
-           that are arguments at the beginning of the cellvars
-           list so that we can march over it more efficiently?
-        */
+       Should arrange for the compiler to put cellvars
+       that are arguments at the beginning of the cellvars
+       list so that we can march over it more efficiently?
+    */
     for (i = 0; i < PyTuple_GET_SIZE(co->co_cellvars); ++i) {
         cellname = PyString_AS_STRING(
             PyTuple_GET_ITEM(co->co_cellvars, i));
