@@ -40,6 +40,8 @@ class Derived(Base):
 
 其中，第二种用法相对少见。除此之外，在`python3`中，可以使用无参数的super。
 
+<!-- more -->
+
 ## super的实现
 
 `super`在实现上是一个内置类型，定义在`typeobject.c`中，其结构体定义如下：
