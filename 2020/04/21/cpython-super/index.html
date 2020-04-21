@@ -55,18 +55,18 @@
   };
 </script>
 
-  <meta name="description" content="什么是supersuper实际上就是抽象的父类对象，用面向对象的方式来调用父类方法的一层封装。典型的使用方式如下： 123456789101112131415161718class Base(object):	def __init__(self):		pass        @classmethod    def test(cls):        passclass Derived(Base):">
+  <meta name="description" content="什么是supersuper实际上就是抽象的父类对象，用面向对象的方式来调用父类方法的一层封装。典型的使用方式如下： 123456789101112131415161718class Base(object):    def __init__(self):        pass        @classmethod    def test(cls):        passclass Deriv">
 <meta name="keywords" content="python,源码,cpython,python-objects">
 <meta property="og:type" content="article">
 <meta property="og:title" content="CPython Super">
 <meta property="og:url" content="http://huangsunyang.com/2020/04/21/cpython-super/index.html">
 <meta property="og:site_name" content="Decode">
-<meta property="og:description" content="什么是supersuper实际上就是抽象的父类对象，用面向对象的方式来调用父类方法的一层封装。典型的使用方式如下： 123456789101112131415161718class Base(object):	def __init__(self):		pass        @classmethod    def test(cls):        passclass Derived(Base):">
+<meta property="og:description" content="什么是supersuper实际上就是抽象的父类对象，用面向对象的方式来调用父类方法的一层封装。典型的使用方式如下： 123456789101112131415161718class Base(object):    def __init__(self):        pass        @classmethod    def test(cls):        passclass Deriv">
 <meta property="og:locale" content="zh-CN">
-<meta property="og:updated_time" content="2020-04-21T17:00:48.129Z">
+<meta property="og:updated_time" content="2020-04-21T17:05:32.636Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="CPython Super">
-<meta name="twitter:description" content="什么是supersuper实际上就是抽象的父类对象，用面向对象的方式来调用父类方法的一层封装。典型的使用方式如下： 123456789101112131415161718class Base(object):	def __init__(self):		pass        @classmethod    def test(cls):        passclass Derived(Base):">
+<meta name="twitter:description" content="什么是supersuper实际上就是抽象的父类对象，用面向对象的方式来调用父类方法的一层封装。典型的使用方式如下： 123456789101112131415161718class Base(object):    def __init__(self):        pass        @classmethod    def test(cls):        passclass Deriv">
   <link rel="canonical" href="http://huangsunyang.com/2020/04/21/cpython-super/">
 
 
@@ -273,7 +273,7 @@
                   <i class="fa fa-calendar-check-o"></i>
                 </span>
                 <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2020-04-22 01:00:48" itemprop="dateModified" datetime="2020-04-22T01:00:48+08:00">2020-04-22</time>
+                <time title="修改时间：2020-04-22 01:05:32" itemprop="dateModified" datetime="2020-04-22T01:05:32+08:00">2020-04-22</time>
               </span>
             
           
@@ -300,7 +300,7 @@
               
                 <span class="post-meta-item-text">本文字数：</span>
               
-              <span>2k</span>
+              <span>2.1k</span>
             </span>
           
             <span class="post-meta-item" title="阅读时长">
@@ -324,7 +324,7 @@
 
       
         <h2 id="什么是super"><a href="#什么是super" class="headerlink" title="什么是super"></a>什么是super</h2><p><code>super</code>实际上就是抽象的父类对象，用面向对象的方式来调用父类方法的一层封装。典型的使用方式如下：</p>
-<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Base</span><span class="params">(object)</span>:</span></span><br><span class="line">	<span class="function"><span class="keyword">def</span> <span class="title">__init__</span><span class="params">(self)</span>:</span></span><br><span class="line">		<span class="keyword">pass</span></span><br><span class="line">    </span><br><span class="line"><span class="meta">    @classmethod</span></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">test</span><span class="params">(cls)</span>:</span></span><br><span class="line">        <span class="keyword">pass</span></span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Derived</span><span class="params">(Base)</span>:</span></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">__init__</span><span class="params">(self)</span>:</span></span><br><span class="line">        super(Derived, self).__init__()     <span class="comment"># (1)</span></span><br><span class="line">        <span class="comment"># super().__init__()				# python3</span></span><br><span class="line">        <span class="comment"># Base.__init__(self)				# 非面向对象</span></span><br><span class="line">    </span><br><span class="line"><span class="meta">    @classmethod</span></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">test</span><span class="params">(cls)</span>:</span></span><br><span class="line">        super(Derived, cls).test()          <span class="comment"># (3)</span></span><br><span class="line">        <span class="comment"># super().test()					# python3</span></span><br></pre></td></tr></table></figure>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Base</span><span class="params">(object)</span>:</span></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">__init__</span><span class="params">(self)</span>:</span></span><br><span class="line">        <span class="keyword">pass</span></span><br><span class="line">    </span><br><span class="line"><span class="meta">    @classmethod</span></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">test</span><span class="params">(cls)</span>:</span></span><br><span class="line">        <span class="keyword">pass</span></span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Derived</span><span class="params">(Base)</span>:</span></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">__init__</span><span class="params">(self)</span>:</span></span><br><span class="line">        super(Derived, self).__init__()     <span class="comment"># (1)</span></span><br><span class="line">        <span class="comment"># super().__init__()                # python3</span></span><br><span class="line">        <span class="comment"># Base.__init__(self)               # 非面向对象</span></span><br><span class="line">    </span><br><span class="line"><span class="meta">    @classmethod</span></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">test</span><span class="params">(cls)</span>:</span></span><br><span class="line">        super(Derived, cls).test()          <span class="comment"># (3)</span></span><br><span class="line">        <span class="comment"># super().test()                    # python3</span></span><br></pre></td></tr></table></figure>
 <h2 id="super的四种用法"><a href="#super的四种用法" class="headerlink" title="super的四种用法"></a>super的四种用法</h2><p>根据<code>super</code>的文档，其一共有三种用法：</p>
 <ul>
 <li>super(type, obj) -&gt; bound super object; requires isinstance(obj, type)</li>
@@ -335,13 +335,13 @@
 <h2 id="super的实现"><a href="#super的实现" class="headerlink" title="super的实现"></a>super的实现</h2><p><code>super</code>在实现上是一个内置类型，定义在<code>typeobject.c</code>中，其结构体定义如下：</p>
 <figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">typedef</span> <span class="class"><span class="keyword">struct</span> &#123;</span></span><br><span class="line">    PyObject_HEAD</span><br><span class="line">    PyTypeObject *type;			<span class="comment">// __thisclass__ the class invoking super</span></span><br><span class="line">    PyObject *obj;				<span class="comment">// __self__ the instance invoking super</span></span><br><span class="line">    PyTypeObject *obj_type;		<span class="comment">// __self_class__ the type of __self__</span></span><br><span class="line">&#125; superobject;</span><br></pre></td></tr></table></figure>
 <p>简单来说，<code>super</code>实现的是一层封装，将对<code>super</code>对象的函数调用转发到对应的父类中去。父类的寻找遵循python中的<code>mro</code>顺序。</p>
-<h4 id="super对象的创建"><a href="#super对象的创建" class="headerlink" title="super对象的创建"></a>super对象的创建</h4><p>super对象的创建相对比较简单，只是将第第一个参数赋值给<code>type</code>，第二个参数赋值给<code>obj</code>，通过调用<code>supercheck</code>进行类型检查，并计算出第三个参数的值。规律如下：</p>
+<h3 id="super对象的创建"><a href="#super对象的创建" class="headerlink" title="super对象的创建"></a>super对象的创建</h3><p>super对象的创建相对比较简单，只是将第第一个参数赋值给<code>type</code>，第二个参数赋值给<code>obj</code>，通过调用<code>supercheck</code>进行类型检查，并计算出第三个参数的值。规律如下：</p>
 <ul>
 <li><code>obj</code>是类型且<code>obj</code>需要是<code>type</code>的子类，则<code>obj_type</code>等于<code>obj</code></li>
 <li><code>obj</code>的类型是<code>type</code>的子类，则<code>obj_type</code>等于<code>Py_TYPE(obj)</code></li>
 <li><code>obj.__class__</code>是type的子类，则<code>obj_type</code>等于<code>obj.__class__</code></li>
 </ul>
-<h4 id="super对象获取父类数据"><a href="#super对象获取父类数据" class="headerlink" title="super对象获取父类数据"></a>super对象获取父类数据</h4><p>从super对象中获取数据用的是<code>super_getattro</code>函数，各种情况如下：</p>
+<h3 id="super对象获取父类数据"><a href="#super对象获取父类数据" class="headerlink" title="super对象获取父类数据"></a>super对象获取父类数据</h3><p>从super对象中获取数据用的是<code>super_getattro</code>函数，各种情况如下：</p>
 <ul>
 <li>如果<code>obj_type</code>为NULL，则直接从当前<code>super</code>对象中获取数据，通常是出错的情况</li>
 <li>如果获取的是<code>__class__</code>属性，则也从当前<code>super</code>对象获取</li>
@@ -573,7 +573,7 @@
             
 
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#什么是super"><span class="nav-number">1.</span> <span class="nav-text">什么是super</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#super的四种用法"><span class="nav-number">2.</span> <span class="nav-text">super的四种用法</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#super的实现"><span class="nav-number">3.</span> <span class="nav-text">super的实现</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#super对象的创建"><span class="nav-number">3.0.1.</span> <span class="nav-text">super对象的创建</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#super对象获取父类数据"><span class="nav-number">3.0.2.</span> <span class="nav-text">super对象获取父类数据</span></a></li></ol></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#python3中的super"><span class="nav-number">4.</span> <span class="nav-text">python3中的super</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#参考资料"><span class="nav-number">5.</span> <span class="nav-text">参考资料</span></a></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#什么是super"><span class="nav-number">1.</span> <span class="nav-text">什么是super</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#super的四种用法"><span class="nav-number">2.</span> <span class="nav-text">super的四种用法</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#super的实现"><span class="nav-number">3.</span> <span class="nav-text">super的实现</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#super对象的创建"><span class="nav-number">3.1.</span> <span class="nav-text">super对象的创建</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#super对象获取父类数据"><span class="nav-number">3.2.</span> <span class="nav-text">super对象获取父类数据</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#python3中的super"><span class="nav-number">4.</span> <span class="nav-text">python3中的super</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#参考资料"><span class="nav-number">5.</span> <span class="nav-text">参考资料</span></a></li></ol></div>
             
 
           </div>
