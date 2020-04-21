@@ -11,8 +11,8 @@ tags: [python, 源码, cpython, python-objects]
 
 ```python
 class Base(object):
-	def __init__(self):
-		pass
+    def __init__(self):
+        pass
     
     @classmethod
     def test(cls):
@@ -21,13 +21,13 @@ class Base(object):
 class Derived(Base):
     def __init__(self):
         super(Derived, self).__init__()     # (1)
-        # super().__init__()				# python3
-        # Base.__init__(self)				# 非面向对象
+        # super().__init__()                # python3
+        # Base.__init__(self)               # 非面向对象
     
     @classmethod
     def test(cls):
         super(Derived, cls).test()          # (3)
-        # super().test()					# python3
+        # super().test()                    # python3
 ```
 
 ## super的四种用法
@@ -55,7 +55,7 @@ typedef struct {
 
 简单来说，`super`实现的是一层封装，将对`super`对象的函数调用转发到对应的父类中去。父类的寻找遵循python中的`mro`顺序。
 
-#### super对象的创建
+### super对象的创建
 
 super对象的创建相对比较简单，只是将第第一个参数赋值给`type`，第二个参数赋值给`obj`，通过调用`supercheck`进行类型检查，并计算出第三个参数的值。规律如下：
 
@@ -63,7 +63,7 @@ super对象的创建相对比较简单，只是将第第一个参数赋值给`ty
 - `obj`的类型是`type`的子类，则`obj_type`等于`Py_TYPE(obj)`
 - `obj.__class__`是type的子类，则`obj_type`等于`obj.__class__`
 
-#### super对象获取父类数据
+### super对象获取父类数据
 
 从super对象中获取数据用的是`super_getattro`函数，各种情况如下：
 
@@ -71,6 +71,8 @@ super对象的创建相对比较简单，只是将第第一个参数赋值给`ty
 - 如果获取的是`__class__`属性，则也从当前`super`对象获取
 - 从`obj_type.__mro__`中找到`type`，从这一项之后开始遍历，从中找到第一个类（新式类/旧式类），从中寻找该变量并返回。如果变量是一个`descriptor`，则尝试调用其`tp_descr_get`方法。
 - 如果寻找失败，则从当前`super`对象中获取数据
+
+
 
 ## python3中的super
 
