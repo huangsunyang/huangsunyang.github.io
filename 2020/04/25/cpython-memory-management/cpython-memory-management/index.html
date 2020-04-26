@@ -59,25 +59,25 @@
 <meta name="keywords" content="python,源码,内存管理">
 <meta property="og:type" content="article">
 <meta property="og:title" content="CPython Memory Management">
-<meta property="og:url" content="http://huangsunyang.com/2020/04/25/cpython-memory-management/index.html">
+<meta property="og:url" content="http://huangsunyang.com/2020/04/25/cpython-memory-management/cpython-memory-management/index.html">
 <meta property="og:site_name" content="Decode">
 <meta property="og:description" content="什么是内存管理内存是数据存储的介质，其访问速度比硬盘快，但是容量相对更小，且断电后数据会丢失。由于内存的种种性质，其成为了计算机开机后访问数据的最佳位置，操作系统或者用户进程所访问的数据大都也都是在内存上。 内存管理实际上管理的是内存物理介质的状态。内存作为一种物理介质，每一个bit都是0/1两种状态，它并不清楚自身存储的数据含义，甚至也并不清楚自身是否被使用了。 通常来说，操作系统为我们管理了作">
 <meta property="og:locale" content="zh-CN">
-<meta property="og:image" content="http://huangsunyang.com/2020/04/25/cpython-memory-management/overview.svg">
-<meta property="og:image" content="http://huangsunyang.com/2020/04/25/cpython-memory-management/pool.svg">
-<meta property="og:image" content="http://huangsunyang.com/2020/04/25/cpython-memory-management/graph-pool_mid_state.svg">
-<meta property="og:image" content="http://huangsunyang.com/2020/04/25/cpython-memory-management/graph-pool_mid_state_alloc.svg">
-<meta property="og:image" content="http://huangsunyang.com/2020/04/25/cpython-memory-management/graph-pool_mid_state_free.svg">
-<meta property="og:image" content="http://huangsunyang.com/2020/04/25/cpython-memory-management/graph-arena_align.svg">
-<meta property="og:image" content="http://huangsunyang.com/2020/04/25/cpython-memory-management/graph-arena_mid_state.svg">
-<meta property="og:image" content="http://huangsunyang.com/2020/04/25/cpython-memory-management/graph-new_arena.svg">
-<meta property="og:image" content="http://huangsunyang.com/2020/04/25/cpython-memory-management/graph-usedpools.svg">
-<meta property="og:updated_time" content="2020-04-26T12:44:48.365Z">
+<meta property="og:image" content="http://huangsunyang.com/2020/04/25/cpython-memory-management/cpython-memory-management/overview.svg">
+<meta property="og:image" content="http://huangsunyang.com/2020/04/25/cpython-memory-management/cpython-memory-management/pool.svg">
+<meta property="og:image" content="http://huangsunyang.com/2020/04/25/cpython-memory-management/cpython-memory-management/graph-pool_mid_state.svg">
+<meta property="og:image" content="http://huangsunyang.com/2020/04/25/cpython-memory-management/cpython-memory-management/graph-pool_mid_state_alloc.svg">
+<meta property="og:image" content="http://huangsunyang.com/2020/04/25/cpython-memory-management/cpython-memory-management/graph-pool_mid_state_free.svg">
+<meta property="og:image" content="http://huangsunyang.com/2020/04/25/cpython-memory-management/cpython-memory-management/graph-arena_align.svg">
+<meta property="og:image" content="http://huangsunyang.com/2020/04/25/cpython-memory-management/cpython-memory-management/graph-arena_mid_state.svg">
+<meta property="og:image" content="http://huangsunyang.com/2020/04/25/cpython-memory-management/cpython-memory-management/graph-new_arena.svg">
+<meta property="og:image" content="http://huangsunyang.com/2020/04/25/cpython-memory-management/cpython-memory-management/graph-usedpools.svg">
+<meta property="og:updated_time" content="2020-04-26T12:52:41.258Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="CPython Memory Management">
 <meta name="twitter:description" content="什么是内存管理内存是数据存储的介质，其访问速度比硬盘快，但是容量相对更小，且断电后数据会丢失。由于内存的种种性质，其成为了计算机开机后访问数据的最佳位置，操作系统或者用户进程所访问的数据大都也都是在内存上。 内存管理实际上管理的是内存物理介质的状态。内存作为一种物理介质，每一个bit都是0/1两种状态，它并不清楚自身存储的数据含义，甚至也并不清楚自身是否被使用了。 通常来说，操作系统为我们管理了作">
-<meta name="twitter:image" content="http://huangsunyang.com/2020/04/25/cpython-memory-management/overview.svg">
-  <link rel="canonical" href="http://huangsunyang.com/2020/04/25/cpython-memory-management/">
+<meta name="twitter:image" content="http://huangsunyang.com/2020/04/25/cpython-memory-management/cpython-memory-management/overview.svg">
+  <link rel="canonical" href="http://huangsunyang.com/2020/04/25/cpython-memory-management/cpython-memory-management/">
 
 
 <script id="page-configurations">
@@ -241,7 +241,7 @@
   
   
   <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://huangsunyang.com/2020/04/25/cpython-memory-management/">
+    <link itemprop="mainEntityOfPage" href="http://huangsunyang.com/2020/04/25/cpython-memory-management/cpython-memory-management/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="name" content="_huang">
@@ -283,7 +283,7 @@
                   <i class="fa fa-calendar-check-o"></i>
                 </span>
                 <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2020-04-26 20:44:48" itemprop="dateModified" datetime="2020-04-26T20:44:48+08:00">2020-04-26</time>
+                <time title="修改时间：2020-04-26 20:52:41" itemprop="dateModified" datetime="2020-04-26T20:52:41+08:00">2020-04-26</time>
               </span>
             
           
@@ -337,6 +337,7 @@
 <p>内存管理实际上管理的是内存物理介质的状态。内存作为一种物理介质，每一个bit都是0/1两种状态，它并不清楚自身存储的数据含义，甚至也并不清楚自身是否被使用了。</p>
 <p>通常来说，操作系统为我们管理了作为物理介质的内存，即使用虚拟内存和分页的方式，使得我们的用户进程能够访问连续的/不受物理内存大小限制的虚拟地址空间。其次，c运行库中的<code>malloc</code>/<code>calloc</code>函数在操作系统层面之上提供了堆空间内存分配的接口。而python在此基础之上，为所有<code>PyObject</code>提供了统一的内存分配/管理接口。</p>
 <h2 id="为什么要进行内存管理"><a href="#为什么要进行内存管理" class="headerlink" title="为什么要进行内存管理"></a>为什么要进行内存管理</h2><p>个人认为，主要原因是为了减少内存分配调用而产生的开销；此外，通用的内存管理也方便在此基础上进行垃圾回收等其他操作。当调用<code>malloc</code>函数时，我们通常会陷入内核进行系统调用，甚至会产生缺页异常从而分配新的页并更新页表，这样的操作是相对费时的。python内存管理的核心目的就是减少小对象的内存分配次数，从而提高程序运行性能。</p>
+<a id="more"></a>
 <h2 id="Block-Pool-Arena概述"><a href="#Block-Pool-Arena概述" class="headerlink" title="Block/Pool/Arena概述"></a>Block/Pool/Arena概述</h2><p>python的内存管理中有三个重要概念，从小到大也就是<code>block</code>/<code>pool</code>/<code>arena</code></p>
 <ul>
 <li><code>block</code>对应着一个<code>PyObject</code>所占据的内存空间，小<code>PyObject</code>都会被分配在一个block中，可能会有一定的内部碎片，相当于字节对齐后的缝隙。block的大小从8-512字节不等。</li>
