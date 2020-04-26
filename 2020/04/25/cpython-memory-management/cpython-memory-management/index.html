@@ -67,7 +67,7 @@
 <meta property="og:image" content="http://huangsunyang.com/2020/04/25/cpython-memory-management/cpython-memory-management/graph-arena_mid_state.svg">
 <meta property="og:image" content="http://huangsunyang.com/2020/04/25/cpython-memory-management/cpython-memory-management/graph-new_arena.svg">
 <meta property="og:image" content="http://huangsunyang.com/2020/04/25/cpython-memory-management/cpython-memory-management/graph-usedpools.svg">
-<meta property="og:updated_time" content="2020-04-26T13:06:32.030Z">
+<meta property="og:updated_time" content="2020-04-26T13:13:24.964Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="CPython Memory Management">
 <meta name="twitter:description" content="什么是内存管理内存是数据存储的介质，其访问速度比硬盘快，但是容量相对更小，且断电后数据会丢失。由于内存的种种性质，其成为了计算机开机后访问数据的最佳位置，操作系统或者用户进程所访问的数据大都也都是在内存上。 内存管理实际上管理的是内存物理介质的状态。内存作为一种物理介质，每一个bit都是0/1两种状态，它并不清楚自身存储的数据含义，甚至也并不清楚自身是否被使用了。 通常来说，操作系统为我们管理了作">
@@ -278,7 +278,7 @@
                   <i class="fa fa-calendar-check-o"></i>
                 </span>
                 <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2020-04-26 21:06:32" itemprop="dateModified" datetime="2020-04-26T21:06:32+08:00">2020-04-26</time>
+                <time title="修改时间：2020-04-26 21:13:24" itemprop="dateModified" datetime="2020-04-26T21:13:24+08:00">2020-04-26</time>
               </span>
             
           
@@ -380,13 +380,13 @@
 </ul>
 <figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/* code fragment for free a block in function pymalloc_free */</span></span><br><span class="line"></span><br><span class="line"><span class="comment">/* Link p to the start of the pool's freeblock list.  Since</span></span><br><span class="line"><span class="comment">* the pool had at least the p block outstanding, the pool</span></span><br><span class="line"><span class="comment">* wasn't empty (so it's already in a usedpools[] list, or</span></span><br><span class="line"><span class="comment">* was full and is in no list -- it's not in the freeblocks</span></span><br><span class="line"><span class="comment">* list in any case).</span></span><br><span class="line"><span class="comment">*/</span></span><br><span class="line">assert(pool-&gt;ref.count &gt; <span class="number">0</span>);            <span class="comment">/* else it was empty */</span></span><br><span class="line">*(block **)p = lastfree = pool-&gt;freeblock;</span><br><span class="line">pool-&gt;freeblock = (block *)p;</span><br><span class="line"><span class="keyword">if</span> (!lastfree) &#123;</span><br><span class="line">    <span class="comment">/* Pool was full, so doesn't currently live in any list:</span></span><br><span class="line"><span class="comment">    * link it to the front of the appropriate usedpools[] list.</span></span><br><span class="line"><span class="comment">    * This mimics LRU pool usage for new allocations and</span></span><br><span class="line"><span class="comment">    * targets optimal filling when several pools contain</span></span><br><span class="line"><span class="comment">    * blocks of the same size class.</span></span><br><span class="line"><span class="comment">    */</span></span><br><span class="line">    --pool-&gt;ref.count;</span><br><span class="line">    assert(pool-&gt;ref.count &gt; <span class="number">0</span>);            <span class="comment">/* else the pool is empty */</span></span><br><span class="line">    size = pool-&gt;szidx;</span><br><span class="line">    next = usedpools[size + size];</span><br><span class="line">    prev = next-&gt;prevpool;</span><br><span class="line">    </span><br><span class="line">    <span class="comment">/* insert pool before next:   prev &lt;-&gt; pool &lt;-&gt; next */</span></span><br><span class="line">    pool-&gt;nextpool = next;</span><br><span class="line">    pool-&gt;prevpool = prev;</span><br><span class="line">    next-&gt;prevpool = pool;</span><br><span class="line">    prev-&gt;nextpool = pool;</span><br><span class="line">    <span class="keyword">goto</span> success;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"> <span class="comment">/* freeblock wasn't NULL, so the pool wasn't full,</span></span><br><span class="line"><span class="comment"> * and the pool is in a usedpools[] list.</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="keyword">if</span> (--pool-&gt;ref.count != <span class="number">0</span>) &#123;</span><br><span class="line">    <span class="comment">/* pool isn't empty:  leave it in usedpools */</span></span><br><span class="line">    <span class="keyword">goto</span> success;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 <h3 id="pool分配释放block图示"><a href="#pool分配释放block图示" class="headerlink" title="pool分配释放block图示"></a>pool分配释放block图示</h3><p>pool的一个中间状态可能如下图所示：</p>
-<iframe src="graph-pool_mid_state.svg" height="500" type="image/svg+xml">
+<embed src="./graph-pool_mid_state.svg" height="500" type="image/svg+xml">
 
 <p>此时如果分配了一个block，则会变为如下图所示</p>
-<iframe src="graph-pool_mid_state_alloc.svg" type="image/svg+xml">
+<embed src="./graph-pool_mid_state_alloc.svg" type="image/svg+xml">
 
 <p>此后如果又释放了一个block，则会变为如下图所示</p>
-<p><embed src="graph-pool_mid_state_free.svg" type="image/svg+xml"></p>
+<p><embed src="./graph-pool_mid_state_free.svg" type="image/svg+xml"></p>
 <h2 id="arena-object如何管理pool"><a href="#arena-object如何管理pool" class="headerlink" title="arena_object如何管理pool"></a>arena_object如何管理pool</h2><h3 id="arena-object结构体"><a href="#arena-object结构体" class="headerlink" title="arena_object结构体"></a>arena_object结构体</h3><p><code>arena_object</code>结构体的定义如下，注意到和<code>pool</code>不同的是，<code>arena_object</code>持有的空间并不包括其自身，而是用<code>address</code>指向的，此外，<code>pool</code>所在的地址是经过字节对齐的，因而是不是从<code>address</code>开始累加的。</p>
 <p>此外，关于<code>arena</code>还定义了一部分常量，例如</p>
 <ul>
@@ -459,7 +459,7 @@
 <p>下图展示了<code>usedpools</code>刚刚初始化完成时的状态，<code>usedpool[i + i]</code>以及<code>usedpools[i + i + 1]</code>中都存放着<code>usedpools[i-1 + i-1]</code>的地址。但是这个地址被当作了pool_header，所以从这个地址作<code>.nextpool</code>操作和<code>.prevpool</code>操作都会取到自身，这也就是初始化的头结点的状态。</p>
 <p>在添加<code>pool_header</code>结构体到链表后，<code>nextpool</code>和<code>prevpool</code>就会连接到一个真正的<code>pool_header</code>对象上了。</p>
 <p><img src="graph-usedpools.svg" alt="graph-usedpools"></p>
-</iframe></iframe>
+
     </div>
 
     
